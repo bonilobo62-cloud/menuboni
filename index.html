@@ -159,16 +159,6 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
       <button class="btn btn-small" onclick="closeDay()" style="padding:8px 12px"><i class="ti ti-x"></i></button>
     </div>
 
-    <!-- TIPO DE MENÚ -->
-    <div class="type-tabs">
-      <div class="type-tab active-rapid" id="tab-rapido" onclick="setMenuType('rapido')">
-        ⚡ Menús Rápidos<br><span style="font-size:11px;font-weight:400">10–20 min</span>
-      </div>
-      <div class="type-tab" id="tab-elaborado" onclick="setMenuType('elaborado')">
-        👨‍🍳 Elaborados<br><span style="font-size:11px;font-weight:400">30–60 min</span>
-      </div>
-    </div>
-
     <div class="day-stats" id="dayStats"></div>
     <div id="mealsContainer"></div>
     <button class="btn btn-small" onclick="randomDay(currentDay)" style="width:100%;margin-top:4px"><i class="ti ti-refresh"></i> Nuevo menú para este día</button>
@@ -207,7 +197,7 @@ let diasGym=[0,2,4]; // Lun, Mié, Vie — configurable
 const comidas=['desayuno','comida','merienda','cena'];
 const iconos={desayuno:'🌅',comida:'🍽️',merienda:'🍎',cena:'🌙'};
 const labels={desayuno:'Desayuno',comida:'Comida',merienda:'Merienda',cena:'Cena'};
-let currentDay=-1, weekPlan=[], openMeals={}, menuType='rapido';
+let currentDay=-1, weekPlan=[], openMeals={};
 let deferredPrompt=null;
 
 // ===== PWA =====
@@ -403,7 +393,8 @@ function savePlan(){localStorage.setItem('menuBoniPlan',JSON.stringify(weekPlan)
 
 function totalKcal(dayPlan,type){
   return comidas.reduce((s,c)=>{
-    const m=dayPlan[c][type];
+    const t=dayPlan[c].tipo||type||'rapido';
+    const m=dayPlan[c][t];
     return s+(m?kcalFromIng(m.ings):0);
   },0);
 }
@@ -413,7 +404,7 @@ function renderDays(){
   const grid=document.getElementById('daysGrid');
   grid.innerHTML=dias.map((d,i)=>{
     const plan=weekPlan[i];
-    const kcal=totalKcal(plan,menuType);
+    const kcal=totalKcal(plan,'rapido');
     const isGym=diasGym.includes(i);
     const isDone=false;
     const isActive=i===currentDay;
@@ -445,26 +436,21 @@ function closeDay(){
   renderDays();
 }
 
-function setMenuType(type){
-  menuType=type;
-  document.getElementById('tab-rapido').className='type-tab'+(type==='rapido'?' active-rapid':'');
-  document.getElementById('tab-elaborado').className='type-tab'+(type==='elaborado'?' active-elaborado':'');
-  renderDays();
-  if(currentDay>=0) renderDayContent();
-}
+// type per meal - no global setter needed
 
 function renderDayContent(){
   const plan=weekPlan[currentDay];
   const isGym=diasGym.includes(currentDay);
-  const totalKc=totalKcal(plan,menuType);
-  const allIngs=comidas.flatMap(c=>plan[c][menuType].ings);
+  const types=comidas.map(c=>plan[c].tipo||'rapido');
+  const totalKc=comidas.reduce((s,c,i)=>s+kcalFromIng(plan[c][types[i]].ings),0);
+  const allIngs=comidas.flatMap((c,i)=>plan[c][types[i]].ings);
   const prot=protFromIng(allIngs), carb=carbFromIng(allIngs), fat=fatFromIng(allIngs);
   document.getElementById('dayStats').innerHTML=
     `<div class="stat-pill"><div class="val">${totalKc}</div><div class="lbl">kcal</div></div>
      <div class="stat-pill"><div class="val">${prot}g</div><div class="lbl">prot</div></div>
      <div class="stat-pill"><div class="val">${carb}g</div><div class="lbl">carb</div></div>
      <div class="stat-pill"><div class="val">${fat}g</div><div class="lbl">grasa</div></div>`;
-  let html=comidas.map(c=>renderMeal(c,plan[c][menuType],isGym&&c==='merienda')).join('');
+  let html=comidas.map((c,i)=>renderMeal(c,plan[c][types[i]],types[i],isGym&&c==='merienda')).join('');
   if(isGym){
     const pg=rnd(postGym);
     html+=`<div style="margin-top:10px;padding:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:14px">
@@ -476,13 +462,47 @@ function renderDayContent(){
   document.getElementById('mealsContainer').innerHTML=html;
 }
 
-function renderMeal(comida,menu,isPostGym){
+function canDrinkToday(comida){
+  const d=currentDay;
+  const isGym=diasGym.includes(d);
+  if(isGym) return null;
+  if(comida==='desayuno'||comida==='merienda') return null;
+  // Vino: max 3 días (Mar=1, Jue=3, Dom=6), solo cena
+  const winedays=[1,3,6];
+  // Cerveza 0,0: hasta 5 días (no gym), comida y cena
+  const beerdays=[0,1,2,3,4,5,6].filter(x=>!diasGym.includes(x));
+  const wines=winedays.includes(d)&&comida==='cena';
+  const beers=beerdays.includes(d);
+  if(wines&&beers) return 'both';
+  if(beers) return 'beer';
+  return null;
+}
+
+function renderMeal(comida,menu,tipo,isPostGym){
   const isOpen=openMeals[comida];
   const kcal=kcalFromIng(menu.ings);
-  const type=menuType;
-  const badge=type==='rapido'
+  const badge=tipo==='rapido'
     ?`<span class="badge badge-rapid">⚡ ${menu.tiempo}</span>`
     :`<span class="badge badge-elaborado">👨‍🍳 ${menu.tiempo}</span>${menu.dif?`<span class="badge badge-dif">${menu.dif}</span>`:''}`;
+  
+  // Type switcher per meal
+  const switcher=`<div style="display:flex;gap:6px;margin-bottom:10px">
+    <button onclick="switchMealType('${comida}','rapido')" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid ${tipo==='rapido'?'var(--green)':'var(--border)'};background:${tipo==='rapido'?'rgba(37,211,102,.08)':'var(--card2)'};color:${tipo==='rapido'?'var(--green)':'var(--muted)'};font-size:13px;cursor:pointer;font-weight:600">⚡ Rápido</button>
+    <button onclick="switchMealType('${comida}','elaborado')" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid ${tipo==='elaborado'?'var(--orange)':'var(--border)'};background:${tipo==='elaborado'?'rgba(216,90,48,.08)':'var(--card2)'};color:${tipo==='elaborado'?'var(--orange)':'var(--muted)'};font-size:13px;cursor:pointer;font-weight:600">👨‍🍳 Elaborado</button>
+  </div>`;
+
+  // Drink options
+  const drinkOpt=canDrinkToday(comida);
+  let drinkSection='';
+  if(drinkOpt){
+    drinkSection=`<div style="background:rgba(239,159,39,.07);border:1px solid rgba(239,159,39,.2);border-radius:10px;padding:10px 12px;margin-top:8px">
+      <div style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:6px">🍷 Opción de bebida especial (tú decides)</div>
+      ${drinkOpt==='both'||drinkOpt==='beer'?`<div style="font-size:14px;color:#ccc;margin-bottom:4px">🍺 Cerveza tostada 0,0 (330ml) · ~90 kcal · Sin alcohol</div>`:''}
+      ${drinkOpt==='both'?`<div style="font-size:14px;color:#ccc">🍷 Vino tinto 1 copa (150ml) · ~120 kcal · Solo en cena</div>`:''}
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">⚠️ No los dos el mismo día · Días de gym: solo agua</div>
+    </div>`;
+  }
+
   return `<div class="meal-accordion${isOpen?' open':''}" id="meal-${comida}">
     <div class="meal-toggle" onclick="toggleMeal('${comida}')">
       <div class="meal-toggle-left">
@@ -495,6 +515,7 @@ function renderMeal(comida,menu,isPostGym){
       <i class="ti ti-chevron-down meal-arrow"></i>
     </div>
     <div class="meal-body">
+      ${switcher}
       <div class="dish-card">
         <div class="dish-header">
           <div class="dish-title">${menu.name}</div>
@@ -515,6 +536,7 @@ function renderMeal(comida,menu,isPostGym){
         </table>
         ${menu.bebida?`<div class="dish-row"><span class="dish-row-label">🥤</span><span class="dish-row-val bebida">${menu.bebida}</span></div>`:''}
         ${menu.postre?`<div class="dish-row"><span class="dish-row-label">🍮</span><span class="dish-row-val postre">${menu.postre}</span></div>`:''}
+        ${drinkSection}
       </div>
       <button class="change-btn" onclick="changeMeal('${comida}')">
         <i class="ti ti-refresh" style="color:var(--orange)"></i> Cambiar este ${labels[comida].toLowerCase()}
@@ -528,9 +550,17 @@ function toggleMeal(c){
   renderDayContent();
 }
 
+function switchMealType(comida, tipo){
+  weekPlan[currentDay][comida].tipo=tipo;
+  savePlan();
+  renderDayContent();
+  renderDays();
+}
+
 function changeMeal(c){
-  const pool=menus[c][menuType];
-  weekPlan[currentDay][c][menuType]=rnd(pool);
+  const tipo=weekPlan[currentDay][c].tipo||'rapido';
+  const pool=menus[c][tipo];
+  weekPlan[currentDay][c][tipo]=rnd(pool);
   savePlan();
   renderDayContent();
   renderDays();
