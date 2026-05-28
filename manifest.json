@@ -1,0 +1,15 @@
+{
+  "name": "Menú Semanal Boni",
+  "short_name": "Menú Boni",
+  "description": "Plan de alimentación semanal con menús rápidos y elaborados",
+  "start_url": "./index.html",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#D85A30",
+  "orientation": "portrait",
+  "icons": [
+    {"src": "icon-192.png","sizes": "192x192","type": "image/png","purpose": "any maskable"},
+    {"src": "icon-512.png","sizes": "512x512","type": "image/png","purpose": "any maskable"}
+  ]
+}
