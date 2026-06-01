@@ -16,7 +16,13 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--border:#2a2a4a;--orange:#D85A30;--gold:#EF9F27;--green:#25D366;--blue:#3a86ff;--text:#e8e8f0;--muted:#888;--r:14px;--rs:10px;--fs-xs:14px;--fs-sm:16px;--fs-md:18px;--fs-lg:20px;--fs-xl:24px}
 body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
-.app{max-width:480px;width:100%;background:var(--card);border-radius:20px;padding:14px;padding-bottom:30px}
+.app{max-width:900px;width:100%;background:var(--card);border-radius:20px;padding:14px;padding-bottom:30px}
+@media(min-width:700px){
+  .days-grid{grid-template-columns:repeat(7,1fr)}
+  .app{padding:24px 32px}
+  .actions-grid{grid-template-columns:repeat(4,1fr)}
+  .btn-full{grid-column:1/-1}
+}
 
 .app-header{background:var(--card2);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .app-header-left h1{font-size:var(--fs-xl);font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
@@ -191,7 +197,7 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
     <button class="btn btn-wa" onclick="shareWhatsApp()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
     <button class="btn btn-yellow btn-full" onclick="openConsejos()"><i class="ti ti-bulb"></i> Consejos · motivación · hábitos</button>
     <button class="btn btn-orange btn-full" onclick="toggleShop()"><i class="ti ti-shopping-cart"></i> Lista de compra por día</button>
-    <button class="btn btn-blue btn-full" onclick="toggleGlobalList()"><i class="ti ti-playlist-add"></i> Mi lista de compra global</button>
+    <button class="btn btn-blue btn-full" onclick="openMiLista()"><i class="ti ti-basket"></i> 🛒 Mi lista de la compra</button>
   </div>
 
   <div id="shopPanel" style="display:none">
@@ -205,14 +211,18 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
       <div id="shopList"></div>
     </div>
   </div>
-  <div id="globalListPanel" style="display:none">
-    <div class="global-list-panel">
+
+  <!-- MI LISTA PANEL -->
+  <div id="miListaPanel" style="display:none;margin-top:10px">
+    <div class="shop-panel">
       <div class="shop-panel-header">
-        <div class="shop-panel-title"><i class="ti ti-playlist-add" style="color:var(--green)"></i>Mi lista de compra global</div>
-        <button class="btn btn-danger btn-small" onclick="toggleGlobalList()"><i class="ti ti-x"></i></button>
+        <div class="shop-panel-title"><i class="ti ti-basket" style="color:var(--blue)"></i> Mi lista de la compra</div>
+        <button class="btn btn-danger btn-small" onclick="closeMiLista()"><i class="ti ti-x"></i></button>
       </div>
-      <p style="font-size:var(--fs-xs);color:var(--muted);margin-top:4px">Ingredientes añadidos desde los platos que has elegido</p>
-      <div id="globalListContent"></div>
+      <p style="font-size:var(--fs-xs);color:var(--muted);margin:6px 0 10px">Marca los platos que vas a cocinar esta semana:</p>
+      <div id="miListaPlatos"></div>
+      <button class="btn btn-orange btn-full" style="margin-top:12px" onclick="generarMiLista()"><i class="ti ti-list-check"></i> Generar lista de ingredientes</button>
+      <div id="miListaResult" style="margin-top:12px"></div>
     </div>
   </div>
 </div>
@@ -651,9 +661,6 @@ function renderMeal(comida,menu,tipo,isPostGym){
       <button class="change-btn" onclick="changeMeal('${comida}')">
         <i class="ti ti-refresh" style="color:var(--orange)"></i> Cambiar este ${labels[comida].toLowerCase()}
       </button>
-      <button class="add-to-list-btn" id="addBtn-${comida}" onclick="toggleAddToList('${comida}',${currentDay},this)">
-        <i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista
-      </button>
     </div>
   </div>`;
 }
@@ -926,7 +933,119 @@ function closeOverlay(){document.getElementById('overlay').classList.remove('ope
 
 
 
-// ===== LISTA GLOBAL =====
+// ===== MI LISTA =====
+let miListaSeleccion={}; // {dayIdx_comida: true/false}
+
+function openMiLista(){
+  const p=document.getElementById('miListaPanel');
+  p.style.display='block';
+  renderMiListaPlatos();
+  p.scrollIntoView({behavior:'smooth'});
+}
+
+function closeMiLista(){
+  document.getElementById('miListaPanel').style.display='none';
+  document.getElementById('miListaResult').innerHTML='';
+}
+
+function renderMiListaPlatos(){
+  const el=document.getElementById('miListaPlatos');
+  let html='';
+  dias.forEach((dia,i)=>{
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;text-transform:uppercase">${dia}</div>`;
+    comidas.forEach(c=>{
+      const tipo=weekPlan[i][c].tipo||'rapido';
+      const menu=weekPlan[i][c][tipo];
+      const key=i+'_'+c;
+      const checked=miListaSeleccion[key]?'checked':'';
+      html+=`<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--card2);border-radius:var(--rs);margin-bottom:5px;cursor:pointer;border:1px solid ${checked?'var(--orange)':'var(--border)'}">
+        <input type="checkbox" ${checked} onchange="miListaSeleccion['${key}']=this.checked;this.closest('label').style.borderColor=this.checked?'var(--orange)':'var(--border)'" style="width:18px;height:18px;accent-color:var(--orange);flex-shrink:0">
+        <div>
+          <div style="font-size:13px;color:#fff;font-weight:500">${labels[c]}</div>
+          <div style="font-size:12px;color:var(--muted)">${menu.name}</div>
+        </div>
+      </label>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function generarMiLista(){
+  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
+  if(!seleccionados.length){
+    document.getElementById('miListaResult').innerHTML='<p style="color:var(--muted);font-size:13px;text-align:center;padding:10px">Selecciona al menos un plato</p>';
+    return;
+  }
+  const allIngs={};
+  seleccionados.forEach(([key])=>{
+    const [dayIdx,comida]=key.split('_');
+    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+    const menu=weekPlan[dayIdx][comida][tipo];
+    const platoLabel=labels[comida]+' · '+dias[dayIdx];
+    menu.ings.forEach(ing=>{
+      if(esDespensa(ing.n)) return;
+      const k=ing.n.toLowerCase();
+      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,platos:[],cat:getCat(ing.n)};
+      allIngs[k].cantidad+=ing.g;
+      allIngs[k].platos.push(platoLabel);
+    });
+  });
+  const cats={};
+  Object.values(allIngs).forEach(i=>{
+    if(!cats[i.cat]) cats[i.cat]=[];
+    cats[i.cat].push(i);
+  });
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:14px;font-weight:700;color:var(--orange)">🛒 Lista generada</div>
+    <button onclick="compartirListaWA()" style="background:var(--green);color:#fff;border:none;border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+  </div>`;
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    html+=`<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin:10px 0 5px">${cat}</div>`;
+    items.forEach(item=>{
+      html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:14px;color:#fff">${item.nombre}</div>
+          <div style="font-size:11px;color:var(--muted)">${item.platos.join(' · ')}</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;margin-left:8px">${Math.round(item.cantidad)}${item.unidad}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('miListaResult').innerHTML=html;
+  document.getElementById('miListaResult').scrollIntoView({behavior:'smooth'});
+}
+
+function compartirListaWA(){
+  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
+  const allIngs={};
+  seleccionados.forEach(([key])=>{
+    const [dayIdx,comida]=key.split('_');
+    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+    const menu=weekPlan[dayIdx][comida][tipo];
+    menu.ings.forEach(ing=>{
+      if(esDespensa(ing.n)) return;
+      const k=ing.n.toLowerCase();
+      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,cat:getCat(ing.n)};
+      allIngs[k].cantidad+=ing.g;
+    });
+  });
+  const cats={};
+  Object.values(allIngs).forEach(i=>{
+    if(!cats[i.cat]) cats[i.cat]=[];
+    cats[i.cat].push(i);
+  });
+  let txt='🛒 *Mi lista de la compra*\n\n';
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    txt+=`*${cat}*\n`;
+    items.forEach(i=>{ txt+=`• ${i.nombre}: ${Math.round(i.cantidad)}${i.unidad}\n`; });
+    txt+='\n';
+  });
+  window.open('https://wa.me/?text='+encodeURIComponent(txt));
+}
+
+// ===== LISTA GLOBAL (legacy) =====
 // Ingredientes de despensa (no se añaden a la lista)
 const despensa=new Set(['aove','aceite','sal','vinagre','pimienta','agua','azúcar','harina','bicarbonato','levadura','canela','cúrcuma','comino','pimentón','romero','tomillo','perejil','eneldo','laurel','orégano','hierbas','hierba','jengibre','azafrán','mostaza','caldo','ajo','cebolla','tomate natural triturado','tomate triturado']);
 
