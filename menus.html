@@ -228,6 +228,7 @@ const iconos={desayuno:'🌅',comida:'🍽️',merienda:'🍎',cena:'🌙'};
 const labels={desayuno:'Desayuno',comida:'Comida',merienda:'Merienda',cena:'Cena'};
 let currentDay=-1, weekPlan=[], openMeals={};
 let deferredPrompt=null;
+let mealHistory={};
 
 // ===== PWA =====
 window.addEventListener('beforeinstallprompt',function(e){
@@ -484,6 +485,18 @@ function renderDays(){
 function openDay(i){
   currentDay=i;
   openMeals={};
+  // Inicializar historial si no existe para este día
+  if(!mealHistory[i]){
+    mealHistory[i]={};
+    comidas.forEach(c=>{
+      mealHistory[i][c]={
+        rapido:[weekPlan[i][c].rapido],
+        elaborado:[weekPlan[i][c].elaborado],
+        posRapido:0,
+        posElaborado:0
+      };
+    });
+  }
   renderDays();
   const panel=document.getElementById('dayPanel');
   panel.classList.add('open');
@@ -492,6 +505,19 @@ function openDay(i){
     `${dias[i]} ${isGym?'<span style="font-size:18px">🏋️</span>':''}`;
   renderDayContent();
   panel.scrollIntoView({behavior:'smooth'});
+}
+
+function navMeal(comida, dir){
+  const tipo=weekPlan[currentDay][comida].tipo||'rapido';
+  const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
+  if(!h) return;
+  const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+  const newPos=h[posKey]+dir;
+  if(newPos<0||newPos>=h[tipo].length) return;
+  h[posKey]=newPos;
+  weekPlan[currentDay][comida][tipo]=h[tipo][newPos];
+  savePlan();
+  renderDayContent();
 }
 
 function closeDay(){
@@ -582,8 +608,21 @@ function renderMeal(comida,menu,tipo,isPostGym){
       ${switcher}
       <div class="dish-card">
         <div class="dish-header">
-          <div class="dish-title">${menu.name}</div>
-          <div class="dish-badges">${badge}</div>
+          <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+            ${(()=>{
+              const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
+              const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+              const pos=h?h[posKey]:0;
+              const total=h?h[tipo].length:1;
+              const canPrev=pos>0;
+              const canNext=pos<total-1;
+              return `<button onclick="event.stopPropagation();navMeal('${comida}',-1)" style="background:none;border:1.5px solid ${canPrev?'var(--orange)':'var(--border)'};color:${canPrev?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canPrev?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">‹</button>
+              <div class="dish-title" style="flex:1;text-align:center">${menu.name}</div>
+              <button onclick="event.stopPropagation();navMeal('${comida}',1)" style="background:none;border:1.5px solid ${canNext?'var(--orange)':'var(--border)'};color:${canNext?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canNext?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">›</button>
+              ${total>1?`<span style="font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0">${pos+1}/${total}</span>`:''}`;
+            })()}
+          </div>
+          <div class="dish-badges" style="flex-shrink:0;margin-top:6px">${badge}</div>
         </div>
         <div class="nutri-box">
           <div style="font-size:20px">📊</div>
@@ -612,14 +651,22 @@ function renderMeal(comida,menu,tipo,isPostGym){
       <button class="change-btn" onclick="changeMeal('${comida}')">
         <i class="ti ti-refresh" style="color:var(--orange)"></i> Cambiar este ${labels[comida].toLowerCase()}
       </button>
-      ${(()=>{
-        const added=isInGlobalList(comida,currentDay);
-        return `<button class="add-to-list-btn${added?' added':''}" onclick="const r=addToGlobalList('${comida}',${currentDay});this.classList.toggle('added',!r);this.innerHTML=!r?'<i class=\\'ti ti-check\\'></i> Añadido a mi lista':'<i class=\\'ti ti-playlist-add\\'></i> ➕ Añadir a mi lista';renderDayContent();">
-          <i class="ti ti-${added?'check':'playlist-add'}"></i> ${added?'Añadido a mi lista':'➕ Añadir a mi lista'}
-        </button>`;
-      })()}
+      <button class="add-to-list-btn" id="addBtn-${comida}" onclick="toggleAddToList('${comida}',${currentDay},this)">
+        <i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista
+      </button>
     </div>
   </div>`;
+}
+
+function toggleAddToList(comida, dayIdx, btn){
+  const added=addToGlobalList(comida, dayIdx);
+  if(added){
+    btn.innerHTML='<i class="ti ti-check"></i> ✅ Añadido a mi lista';
+    btn.classList.add('added');
+  } else {
+    btn.innerHTML='<i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista';
+    btn.classList.remove('added');
+  }
 }
 
 function toggleMeal(c){
@@ -645,8 +692,16 @@ function switchMealType(comida, tipo){
 
 function changeMeal(c){
   const tipo=weekPlan[currentDay][c].tipo||'rapido';
-  const pool=menus[c][tipo];
-  weekPlan[currentDay][c][tipo]=rnd(pool);
+  const nuevo=rnd(menus[c][tipo]);
+  weekPlan[currentDay][c][tipo]=nuevo;
+  // Guardar en historial
+  if(mealHistory[currentDay]&&mealHistory[currentDay][c]){
+    const h=mealHistory[currentDay][c];
+    const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+    h[tipo].splice(h[posKey]+1);
+    h[tipo].push(nuevo);
+    h[posKey]=h[tipo].length-1;
+  }
   savePlan();
   renderDayContent();
   renderDays();
@@ -872,24 +927,20 @@ function addToGlobalList(comida, dayIdx){
   const dia=dias[dayIdx];
   const platoLabel=labels[comida]+' · '+dia;
   const key=dayIdx+'_'+comida+'_'+tipo;
-  // Quitar si ya estaba añadido (toggle)
+  // Toggle: quitar si ya estaba
   const existe=globalList.findIndex(x=>x.key===key);
   if(existe>=0){
     globalList.splice(existe,1);
     renderGlobalList();
-    return false;
+    return false; // quitado
   }
   // Añadir ingredientes no despensa
   menu.ings.forEach(ing=>{
     if(esDespensa(ing.n)) return;
-    const k=ing.n.toLowerCase();
-    const yaExiste=globalList.find(x=>x.nombre.toLowerCase()===k&&x.key===key);
-    if(!yaExiste){
-      globalList.push({nombre:ing.n,cantidad:ing.g,unidad:ing.u,plato:platoLabel,key,cat:getCat(ing.n)});
-    }
+    globalList.push({nombre:ing.n,cantidad:ing.g,unidad:ing.u,plato:platoLabel,key,cat:getCat(ing.n)});
   });
   renderGlobalList();
-  return true;
+  return true; // añadido
 }
 
 function removeGlobalItem(idx){
