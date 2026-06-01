@@ -663,10 +663,26 @@ function toggleAddToList(comida, dayIdx, btn){
   if(added){
     btn.innerHTML='<i class="ti ti-check"></i> ✅ Añadido a mi lista';
     btn.classList.add('added');
+    showToast('✅ Añadido a tu lista de compra');
   } else {
     btn.innerHTML='<i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista';
     btn.classList.remove('added');
+    showToast('❌ Quitado de la lista');
   }
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.style.opacity='0',2000);
 }
 
 function toggleMeal(c){
