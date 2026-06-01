@@ -15,11 +15,12 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--border:#2a2a4a;--orange:#D85A30;--gold:#EF9F27;--green:#25D366;--blue:#3a86ff;--text:#e8e8f0;--muted:#888;--r:14px;--rs:10px;--fs-xs:14px;--fs-sm:16px;--fs-md:18px;--fs-lg:20px;--fs-xl:24px}
-body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
-.app{max-width:900px;width:100%;background:var(--card);border-radius:20px;padding:14px;padding-bottom:30px}
+body{background:var(--bg);display:flex;justify-content:center;padding:0;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
+.app{max-width:900px;width:100%;background:var(--card);border-radius:0;padding:14px;padding-bottom:30px}
 @media(min-width:700px){
+  body{padding:16px}
+  .app{border-radius:20px;padding:24px 32px}
   .days-grid{grid-template-columns:repeat(7,1fr)}
-  .app{padding:24px 32px}
   .actions-grid{grid-template-columns:repeat(4,1fr)}
   .btn-full{grid-column:1/-1}
 }
