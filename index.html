@@ -15,8 +15,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--border:#2a2a4a;--orange:#D85A30;--gold:#EF9F27;--green:#25D366;--blue:#3a86ff;--text:#e8e8f0;--muted:#888;--r:14px;--rs:10px;--fs-xs:14px;--fs-sm:16px;--fs-md:18px;--fs-lg:20px;--fs-xl:24px}
-body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
-.app{max-width:480px;width:100%;background:var(--card);border-radius:20px;padding:14px;padding-bottom:30px}
+html,body{width:100%;margin:0;padding:0;overflow-x:hidden;background:var(--bg)}
+body{min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
+.app{width:100%;background:var(--card);padding:14px;padding-bottom:30px;box-sizing:border-box}
+@media(min-width:700px){
+  body{display:flex;justify-content:center;padding:16px}
+  .app{max-width:900px;border-radius:20px;padding:24px 32px}
+  .days-grid{grid-template-columns:repeat(7,1fr)}
+  .actions-grid{grid-template-columns:repeat(4,1fr)}
+  .btn-full{grid-column:1/-1}
+}
 
 .app-header{background:var(--card2);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .app-header-left h1{font-size:var(--fs-xl);font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
@@ -137,7 +145,15 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
 .tip-item.bad i{color:var(--orange)}
 .tip-item.warn i{color:var(--gold)}
 
-/* RECIPE SECTION */
+/* LISTA GLOBAL */
+.global-list-panel{background:var(--card2);border-radius:var(--r);border:1px solid var(--border);padding:14px;margin-top:10px}
+.global-list-item{display:flex;align-items:flex-start;justify-content:space-between;padding:8px 0;border-bottom:.5px solid var(--border);font-size:var(--fs-sm);color:#ccc;gap:8px}
+.global-list-item:last-child{border-bottom:none}
+.global-list-origin{font-size:11px;color:var(--muted);margin-top:2px}
+.add-to-list-btn{display:flex;align-items:center;gap:6px;padding:9px 12px;border-radius:var(--rs);border:1px solid rgba(37,211,102,.3);background:rgba(37,211,102,.07);color:var(--green);font-size:var(--fs-xs);cursor:pointer;font-weight:600;width:100%;margin-top:8px}
+.add-to-list-btn:active{transform:scale(.98)}
+.add-to-list-btn.added{border-color:var(--border);background:var(--card2);color:var(--muted)}
+
 .recipe-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--rs);border:1px solid rgba(58,134,255,.3);background:rgba(58,134,255,.07);color:var(--blue);font-size:var(--fs-xs);cursor:pointer;font-weight:600;width:100%;margin-top:8px}
 .recipe-section{background:#0d1020;border:1px solid rgba(58,134,255,.2);border-radius:var(--rs);padding:12px;margin-top:8px;display:none}
 .recipe-section.open{display:block}
@@ -183,6 +199,7 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
     <button class="btn btn-wa" onclick="shareWhatsApp()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
     <button class="btn btn-yellow btn-full" onclick="openConsejos()"><i class="ti ti-bulb"></i> Consejos · motivación · hábitos</button>
     <button class="btn btn-orange btn-full" onclick="toggleShop()"><i class="ti ti-shopping-cart"></i> Lista de compra por día</button>
+    <button class="btn btn-blue btn-full" onclick="openMiLista()"><i class="ti ti-basket"></i> 🛒 Mi lista de la compra</button>
   </div>
 
   <div id="shopPanel" style="display:none">
@@ -196,9 +213,21 @@ body{background:var(--bg);display:flex;justify-content:center;padding:12px;min-h
       <div id="shopList"></div>
     </div>
   </div>
-</div>
 
-<div class="overlay" id="overlay">
+  <!-- MI LISTA PANEL -->
+  <div id="miListaPanel" style="display:none;margin-top:10px">
+    <div class="shop-panel">
+      <div class="shop-panel-header">
+        <div class="shop-panel-title"><i class="ti ti-basket" style="color:var(--blue)"></i> Mi lista de la compra</div>
+        <button class="btn btn-danger btn-small" onclick="closeMiLista()"><i class="ti ti-x"></i></button>
+      </div>
+      <p style="font-size:var(--fs-xs);color:var(--muted);margin:6px 0 10px">Marca los platos que vas a cocinar esta semana:</p>
+      <div id="miListaPlatos"></div>
+      <button class="btn btn-orange btn-full" style="margin-top:12px" onclick="generarMiLista()"><i class="ti ti-list-check"></i> Generar lista de ingredientes</button>
+      <div id="miListaResult" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
   <div class="modal" id="modal"></div>
 </div>
 
@@ -211,6 +240,7 @@ const iconos={desayuno:'🌅',comida:'🍽️',merienda:'🍎',cena:'🌙'};
 const labels={desayuno:'Desayuno',comida:'Comida',merienda:'Merienda',cena:'Cena'};
 let currentDay=-1, weekPlan=[], openMeals={};
 let deferredPrompt=null;
+let mealHistory={};
 
 // ===== PWA =====
 window.addEventListener('beforeinstallprompt',function(e){
@@ -301,13 +331,13 @@ const menus={
       {name:'Arroz con pollo y pimientos al estilo casero',tiempo:'50 min',dif:'Medio',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Arroz integral',g:80,u:'g',kcal100:370,prot:7.5,carb:76,fat:2.7},{n:'Pimiento rojo y verde',g:120,u:'g',kcal100:30,prot:1,carb:7,fat:0.3},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Naranja',pasos:['Corta **150g de pollo** en trozos y dora en **10g de AOVE** 5 min.', 'Añade **60g de cebolla** picada y **120g de pimientos** en tiras. Sofríe 8 min.', 'Incorpora **100g de tomate** triturado y cocina 5 min.', 'Añade **80g de arroz integral** y el doble de agua. Sazona.', 'Cocina a fuego bajo tapado 40 min hasta que el arroz absorba el líquido.']},
       {name:'Merluza en salsa verde con almejas',tiempo:'30 min',dif:'Medio',ings:[{n:'Merluza en rodajas',g:200,u:'g',kcal100:86,prot:17,carb:0,fat:1.9},{n:'Almejas',g:80,u:'g',kcal100:74,prot:14,carb:2.5,fat:0.9},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Perejil fresco',g:10,u:'g',kcal100:36,prot:3,carb:6.3,fat:0.8},{n:'Vino blanco',g:30,u:'ml',kcal100:66,prot:0.1,carb:0.6,fat:0},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Gelatina sin azúcar',pasos:['Limpia **80g de almejas** en agua con sal 30 min. Escurre.', 'Pica **10g de ajo** fino. Sofríe en **10g de AOVE** 1 min sin dorar.', 'Añade **30ml de vino blanco** y deja evaporar 2 min.', 'Coloca **200g de merluza** en la sartén. Añade las almejas y **10g de perejil** picado.', 'Mueve suavemente la sartén en círculos para ligar la salsa. Cocina 8 min tapado.']},
       {name:'Estofado de ternera con zanahorias y patata',tiempo:'60 min',dif:'Medio',ings:[{n:'Ternera para estofar',g:150,u:'g',kcal100:150,prot:21,carb:0,fat:7},{n:'Zanahoria',g:100,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Patata',g:100,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana asada',pasos:['Corta **150g de ternera** en dados y dora en **10g de AOVE** a fuego fuerte 5 min.', 'Añade **60g de cebolla** picada y sofríe 5 min más.', 'Incorpora **100g de zanahoria** y **100g de patata** en trozos, **80g de tomate** triturado.', 'Cubre con agua o caldo, sazona. Tapa y cocina a fuego bajo 50 min.', 'Rectifica de sal y sirve caliente.']},
-      {name:'Conejo al ajillo con champiñones',tiempo:'45 min',dif:'Fácil',ings:[{n:'Conejo',g:200,u:'g',kcal100:114,prot:21,carb:0,fat:3.2},{n:'Champiñones',g:150,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'Ajo',g:15,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Vino blanco',g:50,u:'ml',kcal100:66,prot:0.1,carb:0.6,fat:0},{n:'Romero y tomillo',g:3,u:'g',kcal100:131,prot:3.3,carb:29,fat:2},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Pera',pasos:['Sazona **200g de conejo** y dora en **10g de AOVE** 5 min por lado.', 'Añade **15g de ajo** en láminas y sofríe 2 min.', 'Vierte **50ml de vino blanco** y deja evaporar 3 min.', 'Añade **150g de champiñones** laminados y **3g de romero y tomillo**.', 'Tapa y cocina a fuego medio 25 min. Rectifica de sal.']},
+      {name:'Caldereta de cordero con patatas',tiempo:'55 min',dif:'Medio',ings:[{n:'Cordero magro',g:150,u:'g',kcal100:172,prot:20,carb:0,fat:10},{n:'Patata',g:150,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Yogur 0%',pasos:['Corta **150g de cordero magro** en dados. Sazona y dora en **10g de AOVE** a fuego fuerte 5 min. Reserva.','Sofríe **60g de cebolla**, **10g de ajo** y **80g de pimiento rojo** picados en la misma cazuela 8 min.','Añade **100g de tomate** triturado y cocina 5 min.','Incorpora el cordero y **150g de patata** en trozos. Cubre con agua.','Tapa y cocina a fuego bajo 35 min hasta que el cordero esté tierno. Rectifica de sal.']},
       {name:'Fideos con almejas y gambas',tiempo:'35 min',dif:'Medio',ings:[{n:'Fideos integrales',g:80,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Almejas',g:100,u:'g',kcal100:74,prot:14,carb:2.5,fat:0.9},{n:'Gambas',g:100,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Ajo y perejil',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Gelatina',pasos:['Limpia **100g de almejas** en agua salada 30 min.', 'Sofríe **10g de ajo** en **10g de AOVE**. Añade **100g de tomate** triturado, cocina 5 min.', 'Incorpora **80g de fideos integrales** y el doble de agua o caldo de pescado.', 'A mitad de cocción (7 min) añade las almejas y **100g de gambas** peladas.', 'Cocina 7 min más hasta que los fideos estén al dente y las almejas abiertas.']},
       {name:'Potaje de garbanzos con espinacas',tiempo:'45 min',dif:'Fácil',ings:[{n:'Garbanzos cocidos',g:180,u:'g',kcal100:164,prot:8.9,carb:27,fat:2.6},{n:'Espinacas frescas',g:150,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Comino y pimentón',g:3,u:'g',kcal100:375,prot:18,carb:44,fat:17},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Naranja',pasos:['Sofríe **60g de cebolla** y **80g de tomate** en **10g de AOVE** 8 min.', 'Añade **3g de comino y pimentón**, remueve 1 min.', 'Incorpora **180g de garbanzos** cocidos y **150g de espinacas** frescas.', 'Añade un vaso de agua y cocina tapado 20 min a fuego medio.', 'Rectifica de sal y sirve caliente.']},
       {name:'Lasaña de pavo y verduras',tiempo:'60 min',dif:'Medio',ings:[{n:'Pechuga de pavo picada',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Láminas de lasaña integral',g:80,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Tomate natural triturado',g:150,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'Queso fresco',g:60,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Yogur 0%',pasos:['Sofríe **60g de calabacín** picado en **8g de AOVE** 5 min. Reserva.', 'En la misma sartén, cocina **150g de pavo picado** hasta dorar, 8 min.', 'Añade **150g de tomate** triturado y cocina 10 min. Mezcla con el calabacín.', 'Monta en bandeja: capa de pasta, carne, pasta, carne. Cubre con **60g de queso fresco**.', 'Hornea a 180°C durante 25 min hasta gratinar.']},
-      {name:'Paella de verduras con pollo',tiempo:'55 min',dif:'Medio',ings:[{n:'Arroz integral',g:80,u:'g',kcal100:370,prot:7.5,carb:76,fat:2.7},{n:'Pechuga de pollo',g:100,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Judías verdes',g:80,u:'g',kcal100:31,prot:1.8,carb:7,fat:0.1},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Azafrán',g:1,u:'g',kcal100:310,prot:11,carb:65,fat:6},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Fruta del tiempo',pasos:['Dora **100g de pollo** en trozos en **10g de AOVE** 5 min. Reserva.', 'En la misma paellera sofríe **80g de pimiento** y **80g de judías verdes** 5 min.', 'Añade **80g de tomate** rallado y sofríe 3 min. Incorpora el pollo.', 'Añade **80g de arroz integral**, el azafrán disuelto en agua caliente y el doble de caldo.', 'Cocina 20 min sin remover. Deja reposar 5 min tapado antes de servir.']},
-      {name:'Cocido de garbanzos con pollo y verduras',tiempo:'60 min',dif:'Fácil',ings:[{n:'Garbanzos cocidos',g:150,u:'g',kcal100:164,prot:8.9,carb:27,fat:2.6},{n:'Pechuga de pollo',g:120,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Judías verdes',g:80,u:'g',kcal100:31,prot:1.8,carb:7,fat:0.1},{n:'Patata',g:80,u:'g',kcal100:77,prot:2,carb:17,fat:0.1}],bebida:'Agua 330ml',postre:'Pera',pasos:['Pon a cocer **120g de pollo**, **80g de zanahoria**, **80g de judías verdes** y **80g de patata** en agua fría.', 'Lleva a ebullición y desespuma. Cocina a fuego medio 30 min.', 'Añade **150g de garbanzos** cocidos y calienta 10 min más.', 'Sirve el caldo como sopa si quieres, y los sólidos como plato principal.']},
-      {name:'Rape al horno con patatas y limón',tiempo:'45 min',dif:'Fácil',ings:[{n:'Rape',g:200,u:'g',kcal100:76,prot:16,carb:0,fat:1.3},{n:'Patata',g:120,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Limón',g:30,u:'g',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Perejil',g:5,u:'g',kcal100:36,prot:3,carb:6.3,fat:0.8},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana'},
+      {name:'Fideuà de marisco',tiempo:'45 min',dif:'Medio',ings:[{n:'Fideos finos',g:80,u:'g',kcal100:350,prot:12,carb:70,fat:2},{n:'Gambas frescas',g:100,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'Mejillones',g:100,u:'g',kcal100:86,prot:12,carb:3.7,fat:2.2},{n:'Calamar',g:80,u:'g',kcal100:92,prot:16,carb:3,fat:1.4},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Caldo de pescado',g:300,u:'ml',kcal100:8,prot:0.5,carb:1,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Naranja',pasos:['Limpia **100g de mejillones** y **80g de calamar** en rodajas. Pela **100g de gambas**.','Sofríe el calamar en **8g de AOVE** 3 min. Añade **80g de tomate** rallado y sofríe 4 min.','Incorpora **80g de fideos finos** y tuesta ligeramente 2 min.','Vierte **300ml de caldo de pescado** caliente. Añade los mejillones y las gambas.','Cocina a fuego medio 10 min hasta que los fideos absorban el caldo. Deja reposar 3 min.']},
+      {name:'Lentejas estofadas con verduras y cúrcuma',tiempo:'45 min',dif:'Fácil',ings:[{n:'Lentejas pardinas',g:80,u:'g',kcal100:353,prot:26,carb:60,fat:2},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Calabacín',g:80,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cúrcuma',g:2,u:'g',kcal100:354,prot:8,carb:65,fat:10},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Pera',pasos:['Pica **60g de cebolla**, **80g de zanahoria** y **80g de calabacín** en dados pequeños.','Sofríe la cebolla en **8g de AOVE** 5 min. Añade zanahoria y calabacín, cocina 5 min.','Añade **60g de tomate** rallado y **2g de cúrcuma**. Remueve 2 min.','Incorpora **80g de lentejas pardinas** (sin remojar). Cubre con agua o caldo.','Cocina tapado a fuego medio 30 min hasta que las lentejas estén tiernas. Rectifica de sal.']},
+      {name:'Bacalao a la vizcaína',tiempo:'50 min',dif:'Medio',ings:[{n:'Bacalao desalado',g:200,u:'g',kcal100:82,prot:18,carb:0,fat:0.7},{n:'Pimiento choricero seco',g:20,u:'g',kcal100:270,prot:12,carb:50,fat:5},{n:'Cebolla',g:80,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana',pasos:['Hidrata **20g de pimiento choricero** seco en agua caliente 20 min. Saca la pulpa raspando con cuchara.','Sofríe **80g de cebolla** y **10g de ajo** picados en **10g de AOVE** a fuego lento 15 min.','Añade **80g de tomate** rallado y la pulpa del pimiento choricero. Cocina 10 min.','Tritura la salsa. Coloca **200g de bacalao** desalado y cúbrelo con la salsa.','Cocina tapado a fuego suave 12 min. Sirve caliente.']}
     ]
   },
   merienda:{
@@ -343,8 +373,8 @@ const menus={
       {name:'Sardinas al horno + ensalada',tiempo:'20 min',ings:[{n:'Sardinas frescas',g:150,u:'g',kcal100:208,prot:19,carb:0,fat:11},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Rúcula',g:40,u:'g',kcal100:25,prot:2.6,carb:3.7,fat:0.7},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Té frío sin azúcar 250ml',postre:'Gelatina sin azúcar',pasos:['Precalienta horno a 200°C.', 'Coloca **150g de sardinas** frescas en bandeja con sal, ajo y perejil.', 'Hornea 12 min hasta que estén doradas.', 'Sirve con **100g de tomate** + **40g de rúcula** aliñados con **5g de AOVE**.']},
       {name:'Boquerones al limón + ensalada verde',tiempo:'15 min',ings:[{n:'Boquerones frescos',g:150,u:'g',kcal100:131,prot:17,carb:0,fat:4.5},{n:'Lechuga variada',g:80,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'Limón',g:20,u:'g',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Kiwi',pasos:['Limpia **150g de boquerones** frescos y coloca en bandeja.', 'Aliña con el zumo de **20g de limón**, sal y pimienta.', 'Hornea a 200°C durante 10 min.', 'Sirve con **80g de lechuga variada** aliñada con **5g de AOVE**.']},
       {name:'Revuelto de espárragos y gambas',tiempo:'15 min',ings:[{n:'Huevos enteros',g:100,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Espárragos trigueros',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Gambas peladas',g:80,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Gelatina',pasos:['Limpia y corta **100g de espárragos trigueros** en trozos.', 'Saltea en **5g de AOVE** a fuego fuerte 4 min. Añade **80g de gambas** peladas y cocina 2 min más.', 'Bate **100g de huevos** y vierte sobre la mezcla. Remueve suavemente hasta cuajar a fuego bajo.']},
-      {name:'Dorada plancha + espárragos + champiñones',tiempo:'20 min',ings:[{n:'Dorada',g:180,u:'g',kcal100:96,prot:18,carb:0,fat:2.7},{n:'Espárragos',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Champiñones',g:100,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Yogur 0%',pasos:['Sazona **180g de dorada** con sal, pimienta y limón.', 'Cocina en plancha con AOVE, 4 min por cada lado.', 'Saltea **100g de espárragos** y **100g de champiñones** en plancha con AOVE 6 min.', 'Sirve todo junto aliñado con **5g de AOVE**.']},
-      {name:'Ensalada de garbanzos con atún y huevo',tiempo:'10 min',ings:[{n:'Garbanzos cocidos',g:120,u:'g',kcal100:164,prot:8.9,carb:27,fat:2.6},{n:'Atún al natural',g:80,u:'g',kcal100:116,prot:26,carb:0,fat:1},{n:'Huevo cocido',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 250ml',postre:'Gelatina',pasos:['Cuece **1 huevo (60g)** 10 min. Enfría, pela y corta.', 'Mezcla **120g de garbanzos** cocidos + **80g de atún al natural** escurrido + **80g de tomate** en dados.', 'Añade el huevo cortado. Aliña con **5g de AOVE**, limón y pimienta.']},
+      {name:'Caballa al limón + ensalada verde',tiempo:'15 min',ings:[{n:'Caballa fresca',g:180,u:'g',kcal100:205,prot:19,carb:0,fat:14},{n:'Limón zumo',g:30,u:'ml',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Lechuga variada',g:80,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Kiwi',pasos:['Sazona **180g de caballa** con sal, pimienta y el zumo de **30ml de limón**.','Cocina en plancha con unas gotas de AOVE, 4 min por cada lado.','Prepara **80g de lechuga variada** + **80g de tomate** en dados.','Aliña la ensalada con **5g de AOVE** y un poco de limón.','Sirve la caballa sobre la ensalada.']},
+      {name:'Crema de calabacín con quesito',tiempo:'15 min',ings:[{n:'Calabacín',g:300,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Quesito light',g:40,u:'g',kcal100:120,prot:6,carb:3,fat:9},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Caldo de verduras',g:200,u:'ml',kcal100:8,prot:0.5,carb:1.5,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina sin azúcar',pasos:['Trocea **300g de calabacín** y **40g de cebolla**.','Sofríe la cebolla en **5g de AOVE** 3 min. Añade el calabacín y rehoga 3 min más.','Vierte **200ml de caldo de verduras** y cocina 8 min hasta que el calabacín esté tierno.','Añade **40g de quesito light** y tritura hasta obtener crema suave.','Sirve caliente con una pizca de pimienta negra.']},
       {name:'Mejillones al vapor con limón',tiempo:'15 min',ings:[{n:'Mejillones',g:250,u:'g',kcal100:86,prot:12,carb:3.7,fat:2.2},{n:'Limón',g:30,u:'g',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Perejil',g:5,u:'g',kcal100:36,prot:3,carb:6.3,fat:0.8}],bebida:'Infusión manzanilla 250ml',postre:'Pera',pasos:['Limpia **250g de mejillones** frotando las conchas bajo agua fría.', 'Pon en cazuela sin agua, tapa y cocina a fuego fuerte 5-7 min hasta que abran.', 'Desecha los que no hayan abierto.', 'Sirve con zumo de **30g de limón** y **5g de perejil** picado.']},
       {name:'Sopa de verduras con fideos integrales',tiempo:'20 min',ings:[{n:'Caldo de verduras casero',g:400,u:'ml',kcal100:8,prot:0.5,carb:1.5,fat:0.1},{n:'Fideos integrales',g:50,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Zanahoria',g:60,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Calabacín',g:60,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3}],bebida:'Infusión 250ml',postre:'Gelatina',pasos:['Calienta **400ml de caldo de verduras** en un cazo.', 'Añade **60g de zanahoria** y **60g de calabacín** en daditos.', 'Lleva a ebullición y añade **50g de fideos integrales**.', 'Cocina 8 min hasta que los fideos estén tiernos. Sirve caliente.']},
       {name:'Pechuga de pollo al limón + ensalada',tiempo:'15 min',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Limón zumo',g:30,u:'ml',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Lechuga variada',g:100,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Yogur 0%',pasos:['Marina **150g de pechuga** con el zumo de **30ml de limón**, sal y pimienta 10 min.', 'Cocina en plancha 5 min por cada lado.', 'Prepara **100g de lechuga variada** aliñada con **5g de AOVE**.', 'Sirve el pollo sobre la ensalada.']}
@@ -357,9 +387,9 @@ const menus={
       {name:'Crema de puerros con vieiras',tiempo:'35 min',dif:'Medio',ings:[{n:'Puerro',g:200,u:'g',kcal100:31,prot:1.5,carb:7.2,fat:0.3},{n:'Vieiras',g:100,u:'g',kcal100:88,prot:17,carb:3.2,fat:0.8},{n:'Patata',g:80,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Leche desnatada',g:100,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Gelatina',pasos:['Limpia y corta **200g de puerro** en rodajas. Pela **80g de patata**.', 'Sofríe el puerro en **8g de AOVE** 8 min. Añade la patata y cubre con agua.', 'Cocina 20 min. Añade **100ml de leche desnatada** y tritura hasta crema fina.', 'Marca **100g de vieiras** en sartén muy caliente con AOVE, 1 min por lado.', 'Sirve la crema con las vieiras encima.']},
       {name:'Huevos a la flamenca con verduras',tiempo:'30 min',dif:'Fácil',ings:[{n:'Huevos',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Tomate natural triturado',g:150,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Guisantes',g:60,u:'g',kcal100:81,prot:5.4,carb:14,fat:0.4},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 250ml',postre:'Yogur 0%',pasos:['Sofríe **60g de cebolla** y **80g de pimiento** picados en **8g de AOVE** 8 min.', 'Añade **150g de tomate** triturado y **60g de guisantes**. Cocina 10 min.', 'Hace hueco y casca **120g de huevos** directamente sobre el sofrito.', 'Tapa y cocina a fuego bajo 5-8 min hasta que las claras cuajen pero las yemas queden líquidas.']},
       {name:'Sopa de ajo castellana light',tiempo:'30 min',dif:'Fácil',ings:[{n:'Ajo',g:15,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Pan integral duro',g:40,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pimentón',g:3,u:'g',kcal100:282,prot:14,carb:54,fat:13},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina',pasos:['Lamina **15g de ajo** y sofríe en **8g de AOVE** hasta dorar ligeramente.', 'Añade **3g de pimentón** fuera del fuego (para que no se queme). Remueve.', 'Incorpora **40g de pan integral** duro en trozos y cubre con agua caliente.', 'Lleva a ebullición y casca **60g de huevo** dentro. Cocina 3 min.', 'Sirve caliente con perejil picado.']},
-      {name:'Bacalao al pil-pil light',tiempo:'45 min',dif:'Difícil',ings:[{n:'Bacalao desalado',g:200,u:'g',kcal100:82,prot:18,carb:0,fat:0.7},{n:'Ajo',g:15,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Guindilla',g:3,u:'g',kcal100:40,prot:2,carb:9,fat:0.4},{n:'AOVE',g:15,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 250ml',postre:'Manzana asada',pasos:['Desala correctamente **200g de bacalao** (24-48h cambiando el agua).', 'Calienta **15g de AOVE** en cazuela de barro con **15g de ajo** laminado y **3g de guindilla**.', 'Cuando el ajo empiece a dorar, añade el bacalao con la piel hacia arriba.', 'Mueve la cazuela en círculos continuamente para que la gelatina del bacalao ligue la salsa.', 'Cocina 15 min a fuego bajo sin dejar de mover. La salsa debe quedar cremosa.']},
-      {name:'Pollo al ajillo con champiñones',tiempo:'35 min',dif:'Fácil',ings:[{n:'Muslo de pollo sin piel',g:180,u:'g',kcal100:130,prot:19,carb:0,fat:6},{n:'Champiñones',g:150,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'Ajo',g:15,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Vino blanco',g:50,u:'ml',kcal100:66,prot:0.1,carb:0.6,fat:0},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Yogur 0%',pasos:['Trocea **180g de muslo de pollo sin piel** y sazona.', 'Dora en **8g de AOVE** a fuego fuerte 5 min por lado.', 'Añade **15g de ajo** en láminas y sofríe 2 min.', 'Vierte **50ml de vino blanco** y deja evaporar 3 min.', 'Añade **150g de champiñones** laminados. Tapa y cocina 20 min a fuego medio.']},
-      {name:'Lubina a la sal con verduras al vapor',tiempo:'40 min',dif:'Fácil',ings:[{n:'Lubina',g:200,u:'g',kcal100:97,prot:18,carb:0,fat:2.5},{n:'Sal gruesa',g:500,u:'g',kcal100:0,prot:0,carb:0,fat:0},{n:'Espárragos',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina sin azúcar'},
+      {name:'Tatín de verduras con huevo',tiempo:'35 min',dif:'Fácil',ings:[{n:'Huevos',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pimiento rojo',g:100,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Calabacín',g:80,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Cebolla',g:80,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate cherry',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Gelatina',pasos:['Precalienta horno a 180°C.','Corta **80g de cebolla**, **100g de pimiento** y **80g de calabacín** en rodajas finas.','Saltea todas las verduras en **8g de AOVE** 8 min a fuego medio.','Coloca las verduras en molde de horno. Añade **60g de tomate cherry** cortado por la mitad.','Bate **120g de huevos**, salpimenta y vierte sobre las verduras. Hornea 20 min hasta cuajar.']},
+      {name:'Rollitos de pavo con espinacas al horno',tiempo:'35 min',dif:'Fácil',ings:[{n:'Filetes de pechuga de pavo',g:180,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Espinacas frescas',g:100,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Queso fresco',g:40,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'Ajo',g:5,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Yogur 0%',pasos:['Precalienta el horno a 180°C.','Saltea **100g de espinacas** con **5g de ajo** picado en **8g de AOVE** 3 min. Escurre bien.','Extiende **180g de filetes de pavo** finos. Coloca espinacas y **40g de queso fresco** desmenuzado encima.','Enrolla cada filete y sujeta con un palillo. Coloca en bandeja de horno.','Hornea 20 min hasta que estén dorados. Retira los palillos y sirve.']},
+      {name:'Espárragos gratinados con jamón y huevo',tiempo:'25 min',dif:'Fácil',ings:[{n:'Espárragos trigueros',g:200,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Jamón serrano sin sal añadida',g:40,u:'g',kcal100:143,prot:25,carb:0.5,fat:4.5},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Queso fresco rallado',g:20,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Pera',pasos:['Precalienta el horno a 200°C con grill.','Limpia **200g de espárragos** trigueros y coloca en bandeja con **5g de AOVE**.','Asa 10 min en horno. Saca y coloca **40g de jamón serrano** en lonchas encima.','Casca **60g de huevo** sobre los espárragos y espolvorea **20g de queso fresco** rallado.','Gratina 5-7 min hasta que el huevo cuaje y el queso se dore. Sirve inmediatamente.']}
     ]
   }
 };
@@ -416,8 +446,12 @@ const consejos=[
 
 // ===== INIT =====
 function init(){
-  const saved=localStorage.getItem('menuBoniPlan');
-  weekPlan=saved?JSON.parse(saved):dias.map(()=>generateDayPlan());
+  try{
+    const saved=localStorage.getItem('menuBoniPlan');
+    weekPlan=saved?JSON.parse(saved):dias.map(()=>generateDayPlan());
+  } catch(e){
+    weekPlan=dias.map(()=>generateDayPlan());
+  }
   renderDays();
 }
 
@@ -432,7 +466,7 @@ function generateDayPlan(){
   return plan;
 }
 
-function savePlan(){localStorage.setItem('menuBoniPlan',JSON.stringify(weekPlan));}
+function savePlan(){try{localStorage.setItem('menuBoniPlan',JSON.stringify(weekPlan));}catch(e){}}
 
 function totalKcal(dayPlan,type){
   return comidas.reduce((s,c)=>{
@@ -463,6 +497,18 @@ function renderDays(){
 function openDay(i){
   currentDay=i;
   openMeals={};
+  // Inicializar historial si no existe para este día
+  if(!mealHistory[i]){
+    mealHistory[i]={};
+    comidas.forEach(c=>{
+      mealHistory[i][c]={
+        rapido:[weekPlan[i][c].rapido],
+        elaborado:[weekPlan[i][c].elaborado],
+        posRapido:0,
+        posElaborado:0
+      };
+    });
+  }
   renderDays();
   const panel=document.getElementById('dayPanel');
   panel.classList.add('open');
@@ -471,6 +517,19 @@ function openDay(i){
     `${dias[i]} ${isGym?'<span style="font-size:18px">🏋️</span>':''}`;
   renderDayContent();
   panel.scrollIntoView({behavior:'smooth'});
+}
+
+function navMeal(comida, dir){
+  const tipo=weekPlan[currentDay][comida].tipo||'rapido';
+  const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
+  if(!h) return;
+  const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+  const newPos=h[posKey]+dir;
+  if(newPos<0||newPos>=h[tipo].length) return;
+  h[posKey]=newPos;
+  weekPlan[currentDay][comida][tipo]=h[tipo][newPos];
+  savePlan();
+  renderDayContent();
 }
 
 function closeDay(){
@@ -561,8 +620,21 @@ function renderMeal(comida,menu,tipo,isPostGym){
       ${switcher}
       <div class="dish-card">
         <div class="dish-header">
-          <div class="dish-title">${menu.name}</div>
-          <div class="dish-badges">${badge}</div>
+          <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+            ${(()=>{
+              const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
+              const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+              const pos=h?h[posKey]:0;
+              const total=h?h[tipo].length:1;
+              const canPrev=pos>0;
+              const canNext=pos<total-1;
+              return `<button onclick="event.stopPropagation();navMeal('${comida}',-1)" style="background:none;border:1.5px solid ${canPrev?'var(--orange)':'var(--border)'};color:${canPrev?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canPrev?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">‹</button>
+              <div class="dish-title" style="flex:1;text-align:center">${menu.name}</div>
+              <button onclick="event.stopPropagation();navMeal('${comida}',1)" style="background:none;border:1.5px solid ${canNext?'var(--orange)':'var(--border)'};color:${canNext?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canNext?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">›</button>
+              ${total>1?`<span style="font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0">${pos+1}/${total}</span>`:''}`;
+            })()}
+          </div>
+          <div class="dish-badges" style="flex-shrink:0;margin-top:6px">${badge}</div>
         </div>
         <div class="nutri-box">
           <div style="font-size:20px">📊</div>
@@ -584,7 +656,7 @@ function renderMeal(comida,menu,tipo,isPostGym){
       ${menu.pasos ? `<button class="recipe-btn" onclick="toggleRecipe('${comida}')">
         <i class="ti ti-chef-hat"></i> 📋 Ver cómo se prepara
       </button>
-      <div class="recipe-section" id="recipe-${comida}" style="display:${openRecipes[comida]?'block':'none'}">
+      <div class="recipe-section" id="recipe-${comida}" style="display:none">
         <div style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px">Elaboración paso a paso</div>
         ${menu.pasos.map((p,idx)=>'<div class="recipe-step"><div class="recipe-step-num">'+(idx+1)+'</div><div>'+p.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')+'</div></div>').join('')}
       </div>` : ''}
@@ -595,6 +667,33 @@ function renderMeal(comida,menu,tipo,isPostGym){
   </div>`;
 }
 
+function toggleAddToList(comida, dayIdx, btn){
+  const added=addToGlobalList(comida, dayIdx);
+  if(added){
+    btn.innerHTML='<i class="ti ti-check"></i> ✅ Añadido a mi lista';
+    btn.classList.add('added');
+    showToast('✅ Añadido a tu lista de compra');
+  } else {
+    btn.innerHTML='<i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista';
+    btn.classList.remove('added');
+    showToast('❌ Quitado de la lista');
+  }
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.style.opacity='0',2000);
+}
+
 function toggleMeal(c){
   openMeals[c]=!openMeals[c];
   renderDayContent();
@@ -602,11 +701,11 @@ function toggleMeal(c){
 
 var openRecipes={};
 function toggleRecipe(comida){
-  openRecipes[comida]=!openRecipes[comida];
   var el=document.getElementById('recipe-'+comida);
-  if(el) el.style.display=openRecipes[comida]?'block':'none';
-  var btn=document.getElementById('recipe-btn-'+comida);
-  if(btn) btn.style.color=openRecipes[comida]?'var(--orange)':'var(--blue)';
+  if(!el) return;
+  var isOpen=el.style.display==='block';
+  el.style.display=isOpen?'none':'block';
+  openRecipes[comida]=!isOpen;
 }
 
 function switchMealType(comida, tipo){
@@ -618,8 +717,16 @@ function switchMealType(comida, tipo){
 
 function changeMeal(c){
   const tipo=weekPlan[currentDay][c].tipo||'rapido';
-  const pool=menus[c][tipo];
-  weekPlan[currentDay][c][tipo]=rnd(pool);
+  const nuevo=rnd(menus[c][tipo]);
+  weekPlan[currentDay][c][tipo]=nuevo;
+  // Guardar en historial
+  if(mealHistory[currentDay]&&mealHistory[currentDay][c]){
+    const h=mealHistory[currentDay][c];
+    const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+    h[tipo].splice(h[posKey]+1);
+    h[tipo].push(nuevo);
+    h[posKey]=h[tipo].length-1;
+  }
   savePlan();
   renderDayContent();
   renderDays();
@@ -805,7 +912,9 @@ function shareWhatsAppDay(i){
   window.open('https://wa.me/?text='+encodeURIComponent(txt));
 }
 
-// ===== CONSEJOS =====
+// ===== START =====
+// (moved to end of file)
+
 function openConsejos(){
   const frase=rnd(frases);
   let html=`<div class="modal-header"><div class="modal-title"><span>💡</span>Consejos y motivación</div><button class="modal-close" onclick="closeOverlay()">×</button></div>`;
@@ -823,9 +932,232 @@ function openConsejos(){
 }
 
 function closeOverlay(){document.getElementById('overlay').classList.remove('open');}
-document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay') closeOverlay();});
 
-// ===== START =====
+
+
+// ===== MI LISTA =====
+let miListaSeleccion={}; // {dayIdx_comida: true/false}
+
+function openMiLista(){
+  const p=document.getElementById('miListaPanel');
+  p.style.display='block';
+  renderMiListaPlatos();
+  p.scrollIntoView({behavior:'smooth'});
+}
+
+function closeMiLista(){
+  document.getElementById('miListaPanel').style.display='none';
+  document.getElementById('miListaResult').innerHTML='';
+}
+
+function renderMiListaPlatos(){
+  const el=document.getElementById('miListaPlatos');
+  let html='';
+  dias.forEach((dia,i)=>{
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;text-transform:uppercase">${dia}</div>`;
+    comidas.forEach(c=>{
+      const tipo=weekPlan[i][c].tipo||'rapido';
+      const menu=weekPlan[i][c][tipo];
+      const key=i+'_'+c;
+      const checked=miListaSeleccion[key]?'checked':'';
+      html+=`<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--card2);border-radius:var(--rs);margin-bottom:5px;cursor:pointer;border:1px solid ${checked?'var(--orange)':'var(--border)'}">
+        <input type="checkbox" ${checked} onchange="miListaSeleccion['${key}']=this.checked;this.closest('label').style.borderColor=this.checked?'var(--orange)':'var(--border)'" style="width:18px;height:18px;accent-color:var(--orange);flex-shrink:0">
+        <div>
+          <div style="font-size:13px;color:#fff;font-weight:500">${labels[c]}</div>
+          <div style="font-size:12px;color:var(--muted)">${menu.name}</div>
+        </div>
+      </label>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function generarMiLista(){
+  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
+  if(!seleccionados.length){
+    document.getElementById('miListaResult').innerHTML='<p style="color:var(--muted);font-size:13px;text-align:center;padding:10px">Selecciona al menos un plato</p>';
+    return;
+  }
+  const allIngs={};
+  seleccionados.forEach(([key])=>{
+    const [dayIdx,comida]=key.split('_');
+    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+    const menu=weekPlan[dayIdx][comida][tipo];
+    const platoLabel=labels[comida]+' · '+dias[dayIdx];
+    menu.ings.forEach(ing=>{
+      if(esDespensa(ing.n)) return;
+      const k=ing.n.toLowerCase();
+      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,platos:[],cat:getCat(ing.n)};
+      allIngs[k].cantidad+=ing.g;
+      allIngs[k].platos.push(platoLabel);
+    });
+  });
+  const cats={};
+  Object.values(allIngs).forEach(i=>{
+    if(!cats[i.cat]) cats[i.cat]=[];
+    cats[i.cat].push(i);
+  });
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:14px;font-weight:700;color:var(--orange)">🛒 Lista generada</div>
+    <button onclick="compartirListaWA()" style="background:var(--green);color:#fff;border:none;border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+  </div>`;
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    html+=`<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin:10px 0 5px">${cat}</div>`;
+    items.forEach(item=>{
+      html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:14px;color:#fff">${item.nombre}</div>
+          <div style="font-size:11px;color:var(--muted)">${item.platos.join(' · ')}</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;margin-left:8px">${Math.round(item.cantidad)}${item.unidad}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('miListaResult').innerHTML=html;
+  document.getElementById('miListaResult').scrollIntoView({behavior:'smooth'});
+}
+
+function compartirListaWA(){
+  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
+  const allIngs={};
+  seleccionados.forEach(([key])=>{
+    const [dayIdx,comida]=key.split('_');
+    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+    const menu=weekPlan[dayIdx][comida][tipo];
+    menu.ings.forEach(ing=>{
+      if(esDespensa(ing.n)) return;
+      const k=ing.n.toLowerCase();
+      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,cat:getCat(ing.n)};
+      allIngs[k].cantidad+=ing.g;
+    });
+  });
+  const cats={};
+  Object.values(allIngs).forEach(i=>{
+    if(!cats[i.cat]) cats[i.cat]=[];
+    cats[i.cat].push(i);
+  });
+  let txt='🛒 *Mi lista de la compra*\n\n';
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    txt+=`*${cat}*\n`;
+    items.forEach(i=>{ txt+=`• ${i.nombre}: ${Math.round(i.cantidad)}${i.unidad}\n`; });
+    txt+='\n';
+  });
+  window.open('https://wa.me/?text='+encodeURIComponent(txt));
+}
+
+// ===== LISTA GLOBAL (legacy) =====
+// Ingredientes de despensa (no se añaden a la lista)
+const despensa=new Set(['aove','aceite','sal','vinagre','pimienta','agua','azúcar','harina','bicarbonato','levadura','canela','cúrcuma','comino','pimentón','romero','tomillo','perejil','eneldo','laurel','orégano','hierbas','hierba','jengibre','azafrán','mostaza','caldo','ajo','cebolla','tomate natural triturado','tomate triturado']);
+
+function esDespensa(nombre){
+  const n=nombre.toLowerCase();
+  return [...despensa].some(d=>n.includes(d));
+}
+
+let globalList=[]; // [{nombre, cantidad, unidad, plato, dia, key}]
+
+function addToGlobalList(comida, dayIdx){
+  const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+  const menu=weekPlan[dayIdx][comida][tipo];
+  const dia=dias[dayIdx];
+  const platoLabel=labels[comida]+' · '+dia;
+  const key=dayIdx+'_'+comida+'_'+tipo;
+  // Toggle: quitar si ya estaba
+  const existe=globalList.findIndex(x=>x.key===key);
+  if(existe>=0){
+    globalList.splice(existe,1);
+    renderGlobalList();
+    return false; // quitado
+  }
+  // Añadir ingredientes no despensa
+  menu.ings.forEach(ing=>{
+    if(esDespensa(ing.n)) return;
+    globalList.push({nombre:ing.n,cantidad:ing.g,unidad:ing.u,plato:platoLabel,key,cat:getCat(ing.n)});
+  });
+  renderGlobalList();
+  return true; // añadido
+}
+
+function removeGlobalItem(idx){
+  globalList.splice(idx,1);
+  renderGlobalList();
+}
+
+function clearGlobalList(){
+  if(!confirm('¿Vaciar toda la lista?')) return;
+  globalList=[];
+  renderGlobalList();
+  renderDayContent();
+}
+
+function renderGlobalList(){
+  const el=document.getElementById('globalListContent');
+  if(!el) return;
+  if(!globalList.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:var(--fs-xs);text-align:center;padding:20px">Lista vacía · Abre un plato y pulsa ➕ Añadir a mi lista</div>';
+    return;
+  }
+  // Agrupar por categoría
+  const cats={};
+  globalList.forEach((item,idx)=>{
+    if(!cats[item.cat]) cats[item.cat]=[];
+    cats[item.cat].push({...item,idx});
+  });
+  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+    <button onclick="shareGlobalWhatsApp()" style="background:var(--green);color:#fff;border:none;border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+    <button onclick="clearGlobalList()" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-left:8px;text-decoration:underline">Vaciar</button>
+  </div>`;
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    html+=`<div class="shop-cat-label"><i class="ti ti-tag"></i>${cat}</div>`;
+    items.forEach(item=>{
+      html+=`<div class="global-list-item">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-dot" style="color:var(--orange)"></i>${item.nombre} <span style="color:var(--gold);font-weight:600">${Math.round(item.cantidad)}${item.unidad}</span></div>
+          <div class="global-list-origin">📌 ${item.plato}</div>
+        </div>
+        <button onclick="removeGlobalItem(${item.idx})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 0 0 8px">✕</button>
+      </div>`;
+    });
+  });
+  el.innerHTML=html;
+}
+
+function shareGlobalWhatsApp(){
+  if(!globalList.length) return;
+  const cats={};
+  globalList.forEach(i=>{
+    if(!cats[i.cat]) cats[i.cat]=[];
+    cats[i.cat].push(i);
+  });
+  let txt='🛒 *Mi lista de compra*\n\n';
+  Object.entries(cats).sort().forEach(([cat,items])=>{
+    txt+='*'+cat+'*\n';
+    items.forEach(i=>{ txt+='• '+i.nombre+': '+Math.round(i.cantidad)+i.unidad+' ('+i.plato+')\n'; });
+    txt+='\n';
+  });
+  window.open('https://wa.me/?text='+encodeURIComponent(txt));
+}
+
+function toggleGlobalList(){
+  const p=document.getElementById('globalListPanel');
+  p.style.display=p.style.display==='none'?'block':'none';
+  if(p.style.display==='block'){
+    renderGlobalList();
+    p.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function isInGlobalList(comida, dayIdx){
+  const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
+  const key=dayIdx+'_'+comida+'_'+tipo;
+  return globalList.some(x=>x.key===key);
+}
+
+// ===== INIT =====
+const overlayEl=document.getElementById('overlay');
+if(overlayEl) overlayEl.addEventListener('click',e=>{if(e.target.id==='overlay') closeOverlay();});
 init();
 </script>
 </body>
