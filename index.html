@@ -7,170 +7,148 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Menú Boni">
+<meta name="apple-mobile-web-app-title" content="Menú Semanal">
+<title>Menú Semanal Saludable</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
-<title>Menú Semanal Boni</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--border:#2a2a4a;--orange:#D85A30;--gold:#EF9F27;--green:#25D366;--blue:#3a86ff;--text:#e8e8f0;--muted:#888;--r:14px;--rs:10px;--fs-xs:14px;--fs-sm:16px;--fs-md:18px;--fs-lg:20px;--fs-xl:24px}
-html,body{width:100%;margin:0;padding:0;overflow-x:hidden;background:var(--bg)}
-body{min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:var(--fs-sm);color:var(--text)}
-.app{width:100%;background:var(--card);padding:14px;padding-bottom:30px;box-sizing:border-box}
-@media(min-width:700px){
-  body{display:flex;justify-content:center;padding:16px}
-  .app{max-width:900px;border-radius:20px;padding:24px 32px}
-  .days-grid{grid-template-columns:repeat(7,1fr)}
-  .actions-grid{grid-template-columns:repeat(4,1fr)}
-  .btn-full{grid-column:1/-1}
-}
+body{background:#0f0f1a;display:flex;justify-content:center;padding:16px;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:16px}
+.app{max-width:480px;width:100%;background:#1a1a2e;border-radius:20px;padding:14px;padding-bottom:30px}
 
-.app-header{background:var(--card2);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.app-header-left h1{font-size:var(--fs-xl);font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
-.app-header-left p{font-size:var(--fs-xs);color:var(--orange);margin-top:3px}
-.install-btn{background:var(--orange);color:#fff;border:none;border-radius:var(--rs);padding:8px 12px;font-size:var(--fs-xs);cursor:pointer;display:none;align-items:center;gap:5px;font-weight:600;white-space:nowrap}
-.install-btn.show{display:flex}
+/* HEADER */
+.app-header{background:#16213e;border-radius:14px;padding:14px 16px;margin-bottom:12px;border:0.5px solid #2a2a4a}
+.app-header h1{font-size:20px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.app-header p{font-size:13px;color:#F0997B;margin-top:3px}
 
-.alert-box{padding:10px 12px;border-radius:var(--rs);background:#1e1a10;border:1px solid var(--gold);font-size:var(--fs-xs);color:var(--gold);margin-bottom:12px;line-height:1.5;display:flex;align-items:flex-start;gap:8px}
+.alert-box{padding:10px 12px;border-radius:10px;background:#1e1a10;border:0.5px solid #EF9F27;font-size:13px;color:#EF9F27;margin-bottom:12px;line-height:1.5;display:flex;align-items:flex-start;gap:8px}
 
-.section-label{font-size:var(--fs-xs);font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+/* DAYS */
+.section-label{font-size:13px;font-weight:600;color:#EF9F27;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
 .days-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
-.day-card{background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:transform .1s}
-.day-card:active{transform:scale(.95)}
-.day-card.gym{border-color:var(--gold)}
-.day-card.done{border-color:var(--green)}
-.day-card.active-day{border-color:var(--orange);background:#2a1510}
-.day-name{font-size:var(--fs-sm);font-weight:600;color:#fff}
-.day-kcal{font-size:12px;color:var(--muted);margin-top:2px}
-.day-card.done .day-kcal{color:var(--green)}
-.day-sub{font-size:12px;margin-top:2px}
+.day-card{background:#16213e;border:1.5px solid #2a2a4a;border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:transform 0.1s}
+.day-card:active{transform:scale(0.95)}
+.day-card.gym{border-color:#EF9F27}
+.day-card.done{border-color:#25D366}
+.day-card.active-day{border-color:#D85A30;background:#2a1510}
+.day-name{font-size:14px;font-weight:600;color:#fff}
+.day-kcal{font-size:11px;color:#888;margin-top:2px}
+.day-card.done .day-kcal{color:#25D366}
+.day-sub{font-size:11px;margin-top:2px}
 
-.divider{height:1px;background:var(--border);margin:12px 0}
+.divider{height:0.5px;background:#2a2a4a;margin:12px 0}
 
+/* ACTIONS */
 .actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.btn{padding:12px 8px;border-radius:12px;border:1px solid var(--border);background:var(--card2);font-size:var(--fs-sm);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:500;transition:transform .1s}
-.btn:active{transform:scale(.97)}
+.btn{padding:12px 8px;border-radius:12px;border:1px solid #2a2a4a;background:#16213e;font-size:14px;color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:500;transition:transform 0.1s}
+.btn:active{transform:scale(0.97)}
 .btn-full{grid-column:1/-1}
-.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange)}
-.btn-wa{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-yellow{background:var(--card2);color:var(--gold);border-color:var(--gold)}
-.btn-danger{background:#2a1510;color:#F0997B;border-color:var(--orange)}
-.btn-small{padding:8px 12px;font-size:var(--fs-xs);border-radius:var(--rs)}
-.btn-blue{background:rgba(58,134,255,.15);color:var(--blue);border-color:rgba(58,134,255,.3)}
-
-/* TYPE SELECTOR */
-.type-tabs{display:flex;gap:8px;margin-bottom:14px}
-.type-tab{flex:1;padding:10px 8px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--card2);font-size:var(--fs-xs);color:var(--muted);cursor:pointer;text-align:center;font-weight:600;transition:all .15s}
-.type-tab.active-rapid{border-color:var(--green);color:var(--green);background:rgba(37,211,102,.08)}
-.type-tab.active-elaborado{border-color:var(--orange);color:var(--orange);background:rgba(216,90,48,.08)}
+.btn-orange{background:#D85A30;color:#fff;border-color:#D85A30}
+.btn-wa{background:#25D366;color:#fff;border-color:#25D366}
+.btn-yellow{background:#16213e;color:#EF9F27;border-color:#EF9F27}
+.btn-danger{background:#2a1510;color:#F0997B;border-color:#D85A30}
+.btn-small{padding:8px 12px;font-size:13px;border-radius:10px}
 
 /* DAY PANEL */
 .day-panel{display:none;margin-bottom:12px}
 .day-panel.open{display:block}
 .day-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.day-panel-title{font-size:var(--fs-lg);font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.day-panel-title{font-size:19px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
 .day-stats{display:flex;gap:6px;margin-bottom:12px}
-.stat-pill{flex:1;padding:7px 4px;border-radius:var(--rs);background:var(--card2);text-align:center;border:1px solid var(--border)}
-.stat-pill .val{font-size:var(--fs-sm);font-weight:700;color:var(--gold)}
-.stat-pill .lbl{font-size:11px;color:var(--muted);margin-top:1px}
+.stat-pill{flex:1;padding:7px 4px;border-radius:10px;background:#16213e;text-align:center;border:0.5px solid #2a2a4a}
+.stat-pill .val{font-size:14px;font-weight:700;color:#EF9F27}
+.stat-pill .lbl{font-size:10px;color:#666;margin-top:1px}
 
 /* MEAL ACCORDION */
-.meal-accordion{margin-bottom:8px;border-radius:var(--r);border:1px solid var(--border);overflow:hidden;background:var(--card2)}
-.meal-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;cursor:pointer}
+.meal-accordion{margin-bottom:8px;border-radius:14px;border:1px solid #2a2a4a;overflow:hidden;background:#16213e}
+.meal-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;cursor:pointer;background:#16213e}
 .meal-toggle:active{background:#1e2a40}
 .meal-toggle-left{display:flex;align-items:center;gap:10px}
 .meal-icon{font-size:22px}
-.meal-name{font-size:var(--fs-md);font-weight:600;color:#fff}
-.meal-kcal-small{font-size:var(--fs-xs);color:var(--muted);margin-top:1px}
-.meal-arrow{font-size:18px;color:#555;transition:transform .2s}
+.meal-name{font-size:16px;font-weight:600;color:#fff}
+.meal-kcal-small{font-size:12px;color:#888;margin-top:1px}
+.meal-arrow{font-size:18px;color:#555;transition:transform 0.2s}
 .meal-accordion.open .meal-arrow{transform:rotate(180deg)}
 .meal-body{display:none;padding:0 14px 14px}
 .meal-accordion.open .meal-body{display:block}
 
-/* DISH CARD */
-.dish-card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:12px;margin-bottom:10px}
-.dish-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
-.dish-title{font-size:var(--fs-md);font-weight:700;color:#fff;flex:1}
-.dish-badges{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
-.badge{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-rapid{background:rgba(37,211,102,.15);color:var(--green);border:1px solid rgba(37,211,102,.3)}
-.badge-elaborado{background:rgba(216,90,48,.15);color:var(--orange);border:1px solid rgba(216,90,48,.3)}
-.badge-time{background:rgba(58,134,255,.12);color:var(--blue);border:1px solid rgba(58,134,255,.25)}
-.badge-dif{background:rgba(239,159,39,.12);color:var(--gold);border:1px solid rgba(239,159,39,.25)}
-.dish-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:var(--fs-sm);line-height:1.5}
-.dish-row-label{color:var(--gold);font-weight:600;white-space:nowrap}
+/* SELECTED DISH */
+.dish-card{background:#1a1a2e;border-radius:12px;border:1px solid #2a2a4a;padding:12px;margin-bottom:10px}
+.dish-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+.dish-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:14px;line-height:1.5}
+.dish-row-label{color:#EF9F27;font-weight:600;white-space:nowrap}
 .dish-row-val{color:#ccc}
 .dish-row-val.bebida{color:#85B7EB}
 .dish-row-val.postre{color:#F0997B}
-.nutri-box{background:#1e1a10;border:1px solid var(--gold);border-radius:var(--rs);padding:9px 12px;display:flex;align-items:center;gap:8px;margin:10px 0}
-.nutri-vals{font-size:var(--fs-xs);color:var(--gold);font-weight:600;line-height:1.6}
-.nutri-label{font-size:11px;color:var(--muted);margin-right:6px}
-.ing-table{width:100%;border-collapse:collapse;font-size:var(--fs-xs);margin:6px 0 10px}
+.nutri-box{background:#1e1a10;border:1px solid #EF9F27;border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin:10px 0 10px}
+.nutri-icon{font-size:18px}
+.nutri-vals{font-size:13px;color:#EF9F27;font-weight:600;line-height:1.6}
+.nutri-label{font-size:11px;color:#888;margin-right:6px}
+
+/* INGREDIENTS TABLE */
+.ing-table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 10px}
 .ing-table td{padding:3px 0;vertical-align:top;color:#aaa}
 .ing-table td:first-child{color:#ddd;width:58%}
-.ing-table td:last-child{text-align:right;color:var(--gold);font-weight:600}
-.change-btn{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:var(--rs);border:1px solid var(--border);background:var(--card2);font-size:var(--fs-sm);color:#ccc;cursor:pointer;font-weight:500;width:100%}
-.change-btn:active{transform:scale(.98)}
+.ing-table td:last-child{text-align:right;color:#EF9F27;font-weight:600}
 
-/* SHOP */
-.shop-panel{background:var(--card2);border-radius:var(--r);border:1px solid var(--border);padding:14px;margin-top:10px}
+/* CHANGE BUTTON */
+.change-btn{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:10px;border:1px solid #2a2a4a;background:#16213e;font-size:14px;color:#ccc;cursor:pointer;font-weight:500;width:100%}
+.change-btn:active{transform:scale(0.98)}
+
+/* SHOP SECTION */
+.shop-panel{background:#16213e;border-radius:14px;border:1px solid #2a2a4a;padding:14px;margin-top:10px}
 .shop-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.shop-panel-title{font-size:var(--fs-md);font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.shop-panel-title{font-size:16px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
 .shop-day-selector{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
-.shop-day-btn{padding:7px 12px;border-radius:var(--rs);border:1px solid var(--border);background:var(--card);font-size:var(--fs-xs);color:#aaa;cursor:pointer;font-weight:500}
-.shop-day-btn.selected{background:var(--orange);color:#fff;border-color:var(--orange)}
-.shop-cat-label{font-size:var(--fs-xs);font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px;display:flex;align-items:center;gap:6px}
-.shop-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:.5px solid var(--border);font-size:var(--fs-sm);color:#ccc}
-.shop-item i{color:var(--orange)}
-.shop-qty{font-size:var(--fs-xs);color:var(--gold);font-weight:600}
+.shop-day-btn{padding:7px 12px;border-radius:10px;border:1px solid #2a2a4a;background:#1a1a2e;font-size:13px;color:#aaa;cursor:pointer;font-weight:500}
+.shop-day-btn:active{transform:scale(0.97)}
+.shop-day-btn.selected{background:#D85A30;color:#fff;border-color:#D85A30}
+.shop-cat-label{font-size:12px;font-weight:600;color:#EF9F27;text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;display:flex;align-items:center;gap:6px}
+.shop-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid #2a2a4a;font-size:14px;color:#ccc}
+.shop-item-left{display:flex;align-items:center;gap:8px}
+.shop-item i{color:#D85A30}
+.shop-qty{font-size:13px;color:#EF9F27;font-weight:600}
 
-/* MODAL */
-.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);z-index:200;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+/* CONSEJOS MODAL */
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.82);z-index:200;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
 .overlay.open{display:flex}
-.modal{background:var(--card2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:480px;padding:16px;margin:auto}
+.modal{background:#16213e;border:1px solid #2a2a4a;border-radius:20px;width:100%;max-width:480px;padding:16px;margin:auto}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.modal-title{font-size:var(--fs-lg);font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
-.modal-close{background:none;border:none;color:var(--muted);font-size:30px;cursor:pointer;line-height:1;padding:0}
-.tip-highlight{padding:10px 12px;background:#2a1510;border-radius:var(--rs);border:1px solid var(--orange);font-size:var(--fs-xs);color:#F0997B;line-height:1.5;margin-bottom:12px}
-.frase-card{padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--gold);margin-bottom:14px;text-align:center}
-.frase-text{font-size:var(--fs-sm);color:#fff;line-height:1.7;font-style:italic}
-.frase-autor{font-size:var(--fs-xs);color:var(--gold);margin-top:6px}
-.tip-cat-title{font-size:var(--fs-sm);font-weight:700;display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card);border-radius:var(--rs);margin-bottom:6px;border:1px solid var(--border)}
-.tip-block{background:var(--card);border-radius:var(--rs);border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
-.tip-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:.5px solid var(--border);font-size:var(--fs-sm);color:#ccc;line-height:1.5}
+.modal-title{font-size:18px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:none;color:#888;font-size:30px;cursor:pointer;line-height:1;padding:0}
+.tip-highlight{padding:10px 12px;background:#2a1510;border-radius:10px;border:1px solid #D85A30;font-size:13px;color:#F0997B;line-height:1.5;margin-bottom:12px}
+.frase-card{padding:16px;background:#1a1a2e;border-radius:12px;border:1px solid #EF9F27;margin-bottom:14px;text-align:center}
+.frase-text{font-size:15px;color:#fff;line-height:1.7;font-style:italic}
+.frase-autor{font-size:12px;color:#EF9F27;margin-top:6px}
+.tip-cat-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1a1a2e;border-radius:10px;margin-bottom:6px;border:1px solid #2a2a4a}
+.tip-block{background:#1a1a2e;border-radius:10px;border:1px solid #2a2a4a;overflow:hidden;margin-bottom:10px}
+.tip-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:0.5px solid #2a2a4a;font-size:14px;color:#ccc;line-height:1.5}
 .tip-item:last-child{border-bottom:none}
 .tip-item i{font-size:16px;margin-top:1px;flex-shrink:0}
-.tip-item.good i{color:var(--green)}
-.tip-item.bad i{color:var(--orange)}
-.tip-item.warn i{color:var(--gold)}
+.tip-item.good i{color:#25D366}
+.tip-item.bad i{color:#D85A30}
+.tip-item.warn i{color:#EF9F27}
+.tip-item.star i{color:#EF9F27}
 
-/* LISTA GLOBAL */
-.global-list-panel{background:var(--card2);border-radius:var(--r);border:1px solid var(--border);padding:14px;margin-top:10px}
-.global-list-item{display:flex;align-items:flex-start;justify-content:space-between;padding:8px 0;border-bottom:.5px solid var(--border);font-size:var(--fs-sm);color:#ccc;gap:8px}
-.global-list-item:last-child{border-bottom:none}
-.global-list-origin{font-size:11px;color:var(--muted);margin-top:2px}
-.add-to-list-btn{display:flex;align-items:center;gap:6px;padding:9px 12px;border-radius:var(--rs);border:1px solid rgba(37,211,102,.3);background:rgba(37,211,102,.07);color:var(--green);font-size:var(--fs-xs);cursor:pointer;font-weight:600;width:100%;margin-top:8px}
-.add-to-list-btn:active{transform:scale(.98)}
-.add-to-list-btn.added{border-color:var(--border);background:var(--card2);color:var(--muted)}
-
-.recipe-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--rs);border:1px solid rgba(58,134,255,.3);background:rgba(58,134,255,.07);color:var(--blue);font-size:var(--fs-xs);cursor:pointer;font-weight:600;width:100%;margin-top:8px}
-.recipe-section{background:#0d1020;border:1px solid rgba(58,134,255,.2);border-radius:var(--rs);padding:12px;margin-top:8px;display:none}
-.recipe-section.open{display:block}
-.recipe-step{display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:var(--fs-sm);color:#ccc;line-height:1.6}
-.recipe-step:last-child{border-bottom:none}
-.recipe-step-num{background:var(--orange);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
-.recipe-step b{color:#fff}
+/* PWA install banner */
+.install-bar{display:none;background:#16213e;border:1px solid #EF9F27;border-radius:12px;padding:10px 14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:8px}
+.install-bar.show{display:flex}
+.install-bar-text{font-size:13px;color:#ccc;flex:1}
+.install-bar-text strong{color:#EF9F27}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="app-header">
-    <div class="app-header-left">
-      <h1><i class="ti ti-salad" style="color:var(--orange)"></i>Menú Boni</h1>
-      <p>Bajo sodio · bajo IG · cocina real</p>
-    </div>
-    <button class="install-btn" id="installBtn" onclick="installApp()"><i class="ti ti-download"></i> Instalar</button>
+    <h1><i class="ti ti-salad" style="color:#D85A30"></i>Menú Semanal</h1>
+    <p>Bajo sodio · bajo IG · cantidades reales</p>
+  </div>
+
+  <div id="installBar" class="install-bar">
+    <div class="install-bar-text"><strong>📲 Instalar app</strong> — Añádela a tu pantalla de inicio</div>
+    <button class="btn btn-orange btn-small" onclick="installApp()">Instalar</button>
+    <button class="btn btn-small" onclick="document.getElementById('installBar').classList.remove('show')" style="padding:8px">✕</button>
   </div>
 
   <div class="alert-box"><i class="ti ti-alert-triangle"></i><span>Guía orientativa. Consulta siempre a tu médico o dietista.</span></div>
@@ -178,18 +156,15 @@ body{min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:v
   <p class="section-label">Selecciona un día</p>
   <div class="days-grid" id="daysGrid"></div>
 
+  <!-- DAY PANEL -->
   <div class="day-panel" id="dayPanel">
     <div class="day-panel-header">
       <div class="day-panel-title" id="dayPanelTitle"></div>
       <button class="btn btn-small" onclick="closeDay()" style="padding:8px 12px"><i class="ti ti-x"></i></button>
     </div>
-
     <div class="day-stats" id="dayStats"></div>
     <div id="mealsContainer"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-      <button class="btn btn-small btn-wa" onclick="shareWhatsAppDay(currentDay)" style="font-size:13px"><i class="ti ti-brand-whatsapp"></i> WhatsApp día</button>
-      <button class="btn btn-small" onclick="randomDay(currentDay)" style="font-size:13px"><i class="ti ti-refresh"></i> Nuevo menú</button>
-    </div>
+    <button class="btn btn-small" onclick="randomDay(currentDay)" style="width:100%;margin-top:4px"><i class="ti ti-refresh"></i> Nuevo menú para este día</button>
   </div>
 
   <div class="divider"></div>
@@ -199,199 +174,89 @@ body{min-height:100vh;font-family:system-ui,-apple-system,sans-serif;font-size:v
     <button class="btn btn-wa" onclick="shareWhatsApp()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
     <button class="btn btn-yellow btn-full" onclick="openConsejos()"><i class="ti ti-bulb"></i> Consejos · motivación · hábitos</button>
     <button class="btn btn-orange btn-full" onclick="toggleShop()"><i class="ti ti-shopping-cart"></i> Lista de compra por día</button>
-    <button class="btn btn-blue btn-full" onclick="openMiLista()"><i class="ti ti-basket"></i> 🛒 Mi lista de la compra</button>
   </div>
 
+  <!-- SHOP PANEL -->
   <div id="shopPanel" style="display:none">
     <div class="shop-panel">
       <div class="shop-panel-header">
-        <div class="shop-panel-title"><i class="ti ti-shopping-cart" style="color:var(--orange)"></i>Lista de compra</div>
+        <div class="shop-panel-title"><i class="ti ti-shopping-cart" style="color:#D85A30"></i>Lista de compra</div>
         <button class="btn btn-danger btn-small" onclick="toggleShop()"><i class="ti ti-x"></i></button>
       </div>
-      <p style="font-size:var(--fs-xs);color:var(--muted);margin-top:4px">Selecciona el día:</p>
+      <p style="font-size:13px;color:#888;margin-top:4px">Selecciona el día que quieres preparar:</p>
       <div class="shop-day-selector" id="shopDaySelector"></div>
       <div id="shopList"></div>
     </div>
   </div>
-
-  <!-- MI LISTA PANEL -->
-  <div id="miListaPanel" style="display:none;margin-top:10px">
-    <div class="shop-panel">
-      <div class="shop-panel-header">
-        <div class="shop-panel-title"><i class="ti ti-basket" style="color:var(--blue)"></i> Mi lista de la compra</div>
-        <button class="btn btn-danger btn-small" onclick="closeMiLista()"><i class="ti ti-x"></i></button>
-      </div>
-      <p style="font-size:var(--fs-xs);color:var(--muted);margin:6px 0 10px">Marca los platos que vas a cocinar esta semana:</p>
-      <div id="miListaPlatos"></div>
-      <button class="btn btn-orange btn-full" style="margin-top:12px" onclick="generarMiLista()"><i class="ti ti-list-check"></i> Generar lista de ingredientes</button>
-      <div id="miListaResult" style="margin-top:12px"></div>
-    </div>
-  </div>
 </div>
+
+<!-- CONSEJOS OVERLAY -->
+<div class="overlay" id="overlay">
   <div class="modal" id="modal"></div>
 </div>
 
 <script>
-// ===== CONFIG =====
 const dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-let diasGym=[0,2,4]; // Lun, Mié, Vie — configurable
+const diasGym=[0,2,4];
 const comidas=['desayuno','comida','merienda','cena'];
 const iconos={desayuno:'🌅',comida:'🍽️',merienda:'🍎',cena:'🌙'};
 const labels={desayuno:'Desayuno',comida:'Comida',merienda:'Merienda',cena:'Cena'};
 let currentDay=-1, weekPlan=[], openMeals={};
-let deferredPrompt=null;
-let mealHistory={};
 
-// ===== PWA =====
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault();
-  deferredPrompt=e;
-  document.getElementById('installBtn').classList.add('show');
-});
-window.addEventListener('appinstalled',function(){
-  document.getElementById('installBtn').classList.remove('show');
-  alert('✅ App instalada correctamente');
-});
-function installApp(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(){ deferredPrompt=null; });
-  } else {
-    // iOS detection
-    var isIOS=/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-    if(isIOS){
-      alert('Para instalar en iPhone:\n1. Pulsa el botón Compartir (cuadrado con flecha)\n2. Selecciona "Añadir a inicio"');
-    } else {
-      alert('Para instalar:\n• Android: pulsa los 3 puntos del navegador → "Añadir a pantalla de inicio"\n• Si ya está instalada, ábrela desde el icono');
-    }
-  }
-}
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').then(function(reg){
-    reg.update();
-  }).catch(function(){});
-}
-// Show install button always on mobile for manual install option
-setTimeout(function(){
-  var btn=document.getElementById('installBtn');
-  if(!deferredPrompt && /android|iphone|ipad/.test(navigator.userAgent.toLowerCase())){
-    btn.classList.add('show');
-  }
-},2000);
+function kcalFromIng(ings){return Math.round(ings.reduce((s,i)=>s+i.kcal100*i.g/100,0));}
+function protFromIng(ings){return Math.round(ings.reduce((s,i)=>s+(i.prot||0)*i.g/100,0));}
+function carbFromIng(ings){return Math.round(ings.reduce((s,i)=>s+(i.carb||0)*i.g/100,0));}
+function fatFromIng(ings){return Math.round(ings.reduce((s,i)=>s+(i.fat||0)*i.g/100,0));}
 
-// ===== UTILS =====
-function kcalFromIng(i){return Math.round(i.reduce((s,x)=>s+x.kcal100*x.g/100,0));}
-function protFromIng(i){return Math.round(i.reduce((s,x)=>s+(x.prot||0)*x.g/100,0));}
-function carbFromIng(i){return Math.round(i.reduce((s,x)=>s+(x.carb||0)*x.g/100,0));}
-function fatFromIng(i){return Math.round(i.reduce((s,x)=>s+(x.fat||0)*x.g/100,0));}
-function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
-
-// ===== MENUS DATA =====
 const menus={
-  desayuno:{
-    rapido:[
-      {name:'Yogur griego + avena + arándanos',tiempo:'5 min',ings:[{n:'Yogur griego natural',g:150,u:'g',kcal100:97,prot:9,carb:4,fat:5},{n:'Avena cruda',g:40,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Arándanos frescos',g:80,u:'g',kcal100:57,prot:0.7,carb:14,fat:0.3}],bebida:'Té verde 250ml sin azúcar',pasos:['Vierte **150g de yogur griego** en un bol.', 'Añade **40g de avena cruda** encima.', 'Incorpora **80g de arándanos frescos**.', 'Opcional: mezcla todo o deja en capas. Acompaña con **té verde**.']},
-      {name:'Pan integral + aguacate + tomate',tiempo:'5 min',ings:[{n:'Pan integral',g:60,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Aguacate',g:60,u:'g',kcal100:160,prot:2,carb:9,fat:15},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Café solo sin azúcar 200ml',pasos:['Tuesta **60g de pan integral**.', 'Chafa **60g de aguacate** con un tenedor, añade unas gotas de limón.', 'Unta el aguacate sobre el pan.', 'Coloca **80g de tomate** en rodajas encima y un chorrito de AOVE.', 'Acompaña con **café solo sin azúcar**.']},
-      {name:'Queso cottage + fresas + lino',tiempo:'5 min',ings:[{n:'Queso cottage',g:150,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'Fresas',g:100,u:'g',kcal100:32,prot:0.7,carb:7.7,fat:0.3},{n:'Semillas de lino',g:10,u:'g',kcal100:534,prot:18,carb:29,fat:42}],bebida:'Infusión 250ml',pasos:['Vierte **150g de queso cottage** en un bol.', 'Añade **100g de fresas** cortadas en trozos.', 'Espolvorea **10g de semillas de lino** por encima.', 'Mezcla suavemente. Acompaña con infusión.']},
-      {name:'Kéfir + nueces + kiwi',tiempo:'3 min',ings:[{n:'Kéfir natural',g:200,u:'ml',kcal100:61,prot:3.3,carb:4.8,fat:3.5},{n:'Nueces',g:25,u:'g',kcal100:654,prot:15,carb:14,fat:65},{n:'Kiwi',g:100,u:'g',kcal100:61,prot:1.1,carb:15,fat:0.5}],bebida:'Agua con limón 300ml',pasos:['Vierte **200ml de kéfir** en un vaso o bol.', 'Pela y trocea **100g de kiwi**.', 'Añade **25g de nueces** troceadas.', 'Mezcla o toma por separado. Acompaña con agua con limón.']},
-      {name:'Tostada con tomate + jamón serrano',tiempo:'5 min',ings:[{n:'Pan integral',g:60,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Tomate rallado',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Jamón serrano sin grasa',g:30,u:'g',kcal100:143,prot:25,carb:0.5,fat:4.5},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café con leche desnatada 200ml',pasos:['Tuesta **60g de pan integral**.', 'Ralla **60g de tomate** sobre el pan.', 'Coloca **30g de jamón serrano** sin grasa.', 'Añade un chorrito de **5g de AOVE**. Acompaña con café con leche desnatada.']},
-      {name:'Porridge avena con manzana y canela',tiempo:'8 min',ings:[{n:'Avena en copos',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Leche desnatada',g:200,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Manzana',g:80,u:'g',kcal100:52,prot:0.3,carb:14,fat:0.2},{n:'Canela',g:2,u:'g',kcal100:247,prot:4,carb:81,fat:1}],bebida:'Té manzanilla 250ml',pasos:['Pon **60g de avena** en un cazo con **200ml de leche desnatada**.', 'Cocina a fuego medio removiendo durante 5 min hasta que espese.', 'Pela y ralla **80g de manzana** e incorpora al porridge.', 'Espolvorea **2g de canela** al gusto. Sirve caliente.']},
-      {name:'Smoothie plátano + avena + leche',tiempo:'5 min',ings:[{n:'Plátano',g:100,u:'g',kcal100:89,prot:1.1,carb:23,fat:0.3},{n:'Avena cruda',g:30,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Leche desnatada',g:200,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1}],bebida:'Agua 250ml',pasos:['Tritura **100g de plátano** + **30g de avena** + **200ml de leche desnatada** en la batidora.', 'Bate 30 segundos hasta obtener textura cremosa.', 'Sirve inmediatamente en un vaso.']},
-      {name:'Pan integral + pavo + rúcula',tiempo:'5 min',ings:[{n:'Pan integral',g:60,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Pechuga de pavo fiambre',g:50,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Rúcula',g:20,u:'g',kcal100:25,prot:2.6,carb:3.7,fat:0.7},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café solo 200ml',pasos:['Tuesta **60g de pan integral**.', 'Coloca **50g de pechuga de pavo** fiambre sobre el pan.', 'Añade **20g de rúcula** y un chorrito de **5g de AOVE**.', 'Acompaña con café solo.']},
-      {name:'Muesli sin azúcar + yogur + frutas',tiempo:'3 min',ings:[{n:'Muesli sin azúcar',g:50,u:'g',kcal100:350,prot:9,carb:60,fat:7},{n:'Yogur natural 0%',g:125,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'Fresas o arándanos',g:80,u:'g',kcal100:40,prot:0.8,carb:9,fat:0.3}],bebida:'Té verde 250ml',pasos:['Vierte **125g de yogur natural 0%** en un bol.', 'Añade **50g de muesli sin azúcar** encima.', 'Incorpora **80g de fresas o arándanos**.', 'Mezcla suavemente. Acompaña con té verde.']},
-      {name:'Huevo cocido + pan integral + tomate',tiempo:'10 min',ings:[{n:'Huevo entero cocido',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pan integral',g:50,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café con leche desnatada 200ml',pasos:['Cuece **1 huevo (60g)** en agua hirviendo 10 min. Enfría bajo agua fría y pela.', 'Tuesta **50g de pan integral**.', 'Corta el huevo en rodajas. Corta **100g de tomate**.', 'Monta el plato con un chorrito de **5g de AOVE**.']}
-    ],
-    elaborado:[
-      {name:'Tortilla de claras con espinacas y champiñones',tiempo:'15 min',dif:'Fácil',ings:[{n:'Claras de huevo',g:150,u:'g',kcal100:52,prot:11,carb:0.7,fat:0.2},{n:'Yema de huevo',g:18,u:'g',kcal100:322,prot:16,carb:1,fat:27},{n:'Espinacas frescas',g:80,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Champiñones',g:80,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café solo sin azúcar 200ml',pasos:['Limpia y lamina **80g de champiñones**. Lava **80g de espinacas**.', 'Sofríe champiñones en **8g de AOVE** a fuego vivo 3 min. Añade espinacas y saltea 2 min más.', 'Bate **150g de claras** con **18g de yema**. Salpimenta.', 'En la misma sartén, vierte el huevo batido sobre las verduras.', 'Cocina 2 min, voltea y otros 2 min. Sirve doblada.']},
-      {name:'Revuelto de setas con tostada integral',tiempo:'15 min',dif:'Fácil',ings:[{n:'Huevos enteros',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Setas variadas',g:100,u:'g',kcal100:35,prot:3.5,carb:5,fat:0.5},{n:'Ajo y perejil',g:5,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100},{n:'Pan integral',g:50,u:'g',kcal100:247,prot:8,carb:41,fat:3}],bebida:'Café con leche desnatada 200ml',pasos:['Limpia y lamina **100g de setas**. Pica **5g de ajo y perejil**.', 'Calienta **8g de AOVE** en sartén, añade el ajo y sofríe 1 min.', 'Añade las setas y saltea 4 min a fuego fuerte.', 'Bate **120g de huevos** y vierte sobre las setas. Remueve suavemente hasta cuajar.', 'Sirve sobre **50g de pan integral** tostado.']},
-      {name:'Crepes de avena con queso y fruta',tiempo:'20 min',dif:'Fácil',ings:[{n:'Avena molida',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Leche desnatada',g:100,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Queso fresco batido',g:80,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'Fresas',g:80,u:'g',kcal100:32,prot:0.7,carb:7.7,fat:0.3}],bebida:'Té verde 250ml',pasos:['Mezcla **60g de avena molida** + **60g de huevo** + **100ml de leche desnatada** hasta obtener masa homogénea.', 'Calienta una sartén antiadherente con unas gotas de aceite.', 'Vierte un cucharón de masa y extiende. Cocina 2 min por cada lado.', 'Repite con el resto de masa (salen 2-3 crepes).', 'Rellena con **80g de queso fresco batido** y **80g de fresas** troceadas.']},
-      {name:'Tostada integral con huevo poché y aguacate',tiempo:'15 min',dif:'Medio',ings:[{n:'Pan integral',g:60,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Huevo entero',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Aguacate',g:70,u:'g',kcal100:160,prot:2,carb:9,fat:15},{n:'Tomate cherry',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Café solo 200ml',pasos:['Pon agua a hervir con un chorrito de vinagre.', 'Casca **60g de huevo** en un vasito. Crea un remolino en el agua y desliza el huevo. Cocina 3 min.', 'Tuesta **60g de pan integral**.', 'Chafa **70g de aguacate** y unta sobre el pan. Coloca el huevo poché encima.', 'Añade **60g de tomate cherry** cortado al lado.']},
-      {name:'Pancakes de plátano y avena',tiempo:'20 min',dif:'Fácil',ings:[{n:'Plátano maduro',g:100,u:'g',kcal100:89,prot:1.1,carb:23,fat:0.3},{n:'Avena cruda',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Yogur griego 0%',g:100,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4}],bebida:'Té manzanilla 250ml',pasos:['Chafa **100g de plátano maduro** con un tenedor hasta obtener puré.', 'Mezcla con **60g de avena**, **60g de huevo** batido. Integra bien.', 'Calienta sartén antiadherente con unas gotas de aceite a fuego medio.', 'Vierte cucharadas de masa formando discos. Cocina 2 min por lado.', 'Sirve con **100g de yogur griego 0%** por encima.']},
-      {name:'Quiche de verduras sin masa',tiempo:'35 min',dif:'Medio',ings:[{n:'Huevos',g:180,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Queso fresco batido',g:100,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café con leche desnatada 200ml',pasos:['Precalienta el horno a 180°C.', 'Pica **100g de calabacín** y **80g de pimiento** en daditos. Saltea en **5g de AOVE** 5 min.', 'Bate **180g de huevos** con **100g de queso fresco batido**. Salpimenta.', 'Mezcla verduras con el huevo batido.', 'Vierte en un molde engrasado y hornea 25 min hasta que esté dorado.']},
-      {name:'Bowl de quinoa con fruta y yogur',tiempo:'25 min',dif:'Fácil',ings:[{n:'Quinoa cocida',g:100,u:'g',kcal100:120,prot:4.4,carb:22,fat:1.9},{n:'Yogur griego natural',g:125,u:'g',kcal100:97,prot:9,carb:4,fat:5},{n:'Arándanos',g:60,u:'g',kcal100:57,prot:0.7,carb:14,fat:0.3},{n:'Nueces',g:20,u:'g',kcal100:654,prot:15,carb:14,fat:65},{n:'Miel',g:10,u:'g',kcal100:304,prot:0.3,carb:82,fat:0}],bebida:'Té verde 250ml',pasos:['Cuece **100g de quinoa** en agua hirviendo 15 min. Escurre y deja enfriar.', 'En un bol, coloca la quinoa como base.', 'Añade **125g de yogur griego** encima.', 'Incorpora **60g de arándanos** y **20g de nueces** troceadas.', 'Rocía con **10g de miel**. Acompaña con té verde.']},
-      {name:'Frittata de verduras al horno',tiempo:'30 min',dif:'Medio',ings:[{n:'Huevos',g:180,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Espinacas',g:80,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Tomate cherry',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café solo 200ml',pasos:['Precalienta horno a 180°C.', 'Pica **80g de espinacas**, **80g de tomate cherry** y **40g de cebolla**.', 'Sofríe cebolla en **8g de AOVE** 3 min. Añade espinacas 2 min.', 'Bate **180g de huevos**, mezcla con las verduras y el tomate cherry.', 'Vierte en sartén apta para horno y hornea 20 min.']},
-      {name:'Granola casera con yogur y mango',tiempo:'40 min',dif:'Medio',ings:[{n:'Avena',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Nueces picadas',g:20,u:'g',kcal100:654,prot:15,carb:14,fat:65},{n:'Semillas de girasol',g:10,u:'g',kcal100:584,prot:21,carb:20,fat:52},{n:'Yogur griego 0%',g:150,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4},{n:'Mango',g:80,u:'g',kcal100:60,prot:0.8,carb:15,fat:0.4}],bebida:'Té verde 250ml',pasos:['Mezcla **60g de avena** + **20g de nueces picadas** + **10g de semillas de girasol**.', 'Extiende en bandeja y hornea a 160°C durante 20 min removiendo a mitad.', 'Deja enfriar completamente (quedará crujiente).', 'Sirve con **150g de yogur griego 0%** y **80g de mango** troceado.']},
-      {name:'Tostada con salmón ahumado y queso fresco',tiempo:'10 min',dif:'Fácil',ings:[{n:'Pan integral',g:60,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Salmón ahumado',g:60,u:'g',kcal100:117,prot:18,carb:0,fat:4.3},{n:'Queso fresco batido',g:60,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'Alcaparras',g:10,u:'g',kcal100:23,prot:2.4,carb:4.9,fat:0.9},{n:'Eneldo',g:3,u:'g',kcal100:43,prot:3.5,carb:7,fat:1.1}],bebida:'Café con leche desnatada 200ml'},
-    ]
-  },
-  comida:{
-    rapido:[
-      {name:'Pollo plancha + arroz integral + ensalada',tiempo:'15 min',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Arroz integral cocido',g:120,u:'g',kcal100:123,prot:2.7,carb:26,fat:0.9},{n:'Lechuga + tomate',g:100,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua mineral 330ml',postre:'Naranja 1 ud.',pasos:['Tuesta **60g de pan integral**.', 'Unta **60g de queso fresco batido** sobre el pan.', 'Coloca **60g de salmón ahumado** encima.', 'Añade **10g de alcaparras** y **3g de eneldo** fresco picado.', 'Acompaña con café con leche desnatada.']},
-      {name:'Merluza plancha + quinoa + brócoli',tiempo:'20 min',ings:[{n:'Merluza',g:180,u:'g',kcal100:86,prot:17,carb:0,fat:1.9},{n:'Quinoa cocida',g:100,u:'g',kcal100:120,prot:4.4,carb:22,fat:1.9},{n:'Brócoli vapor',g:150,u:'g',kcal100:34,prot:2.8,carb:7,fat:0.4},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Gelatina sin azúcar',pasos:['Sazona **180g de merluza** con sal, pimienta y limón.', 'Cocina en plancha con unas gotas de AOVE, 3-4 min por cada lado.', 'Cuece **150g de brócoli** al vapor 8 min.', 'Sirve con **100g de quinoa** cocida y **8g de AOVE** en el brócoli.']},
-      {name:'Salmón plancha + boniato + judías verdes',tiempo:'20 min',ings:[{n:'Salmón fresco',g:150,u:'g',kcal100:208,prot:20,carb:0,fat:13},{n:'Boniato asado',g:120,u:'g',kcal100:90,prot:1.6,carb:21,fat:0.1},{n:'Judías verdes vapor',g:120,u:'g',kcal100:31,prot:1.8,carb:7,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Té frío sin azúcar 330ml',postre:'Yogur 0%',pasos:['Sazona **150g de salmón** con eneldo, sal y pimienta.', 'Cocina en plancha 4 min por cada lado.', 'Asa **120g de boniato** en dados al horno 200°C durante 20 min o microondas 6 min.', 'Cuece **120g de judías verdes** al vapor 8 min. Aliña con **5g de AOVE**.']},
-      {name:'Pavo con pasta integral y tomate natural',tiempo:'20 min',ings:[{n:'Pechuga de pavo',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Pasta integral cocida',g:120,u:'g',kcal100:124,prot:5,carb:26,fat:1},{n:'Tomate natural triturado',g:100,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Pera 1 ud.',pasos:['Corta **150g de pechuga de pavo** en tiras y sazona.', 'Saltea en sartén con unas gotas de AOVE a fuego fuerte 5 min.', 'Añade **100g de tomate triturado** natural y cocina 5 min más.', 'Sirve sobre **120g de pasta integral** cocida al dente.']},
-      {name:'Ensalada de garbanzos con atún',tiempo:'10 min',ings:[{n:'Garbanzos cocidos',g:150,u:'g',kcal100:164,prot:8.9,carb:27,fat:2.6},{n:'Atún al natural',g:100,u:'g',kcal100:116,prot:26,carb:0,fat:1},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolleta',g:30,u:'g',kcal100:32,prot:1,carb:7,fat:0.2},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Naranja 1 ud.',pasos:['Abre y escurre **150g de garbanzos** cocidos (bote) y **100g de atún al natural**.', 'Corta **80g de tomate** en dados y **30g de cebolleta** en rodajas finas.', 'Mezcla todo en un bol.', 'Aliña con **10g de AOVE**, vinagre y pimienta.']},
-      {name:'Bacalao plancha + patata cocida + pimientos',tiempo:'20 min',ings:[{n:'Bacalao desalado',g:160,u:'g',kcal100:82,prot:18,carb:0,fat:0.7},{n:'Patata cocida',g:100,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Pimientos asados',g:100,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana verde',pasos:['Cuece **100g de patata** en agua 20 min. Escurre y reserva.', 'Cocina **160g de bacalao desalado** en plancha con AOVE, 3 min por lado.', 'Calienta **100g de pimientos asados** (de bote o asados previamente).', 'Monta el plato y aliña con **8g de AOVE**.']},
-      {name:'Lentejas express con verduras',tiempo:'20 min',ings:[{n:'Lentejas cocidas',g:180,u:'g',kcal100:116,prot:9,carb:20,fat:0.4},{n:'Zanahoria',g:60,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Cebolla',g:50,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 330ml',postre:'2 mandarinas',pasos:['Pica **60g de zanahoria** y **50g de cebolla** en daditos.', 'Sofríe en **8g de AOVE** 5 min.', 'Añade **180g de lentejas** cocidas (bote escurrido), sal y comino.', 'Mezcla bien y calienta 5 min a fuego medio. Sirve caliente.']},
-      {name:'Lubina plancha + arroz basmati + espárragos',tiempo:'20 min',ings:[{n:'Lubina',g:180,u:'g',kcal100:97,prot:18,carb:0,fat:2.5},{n:'Arroz basmati cocido',g:120,u:'g',kcal100:130,prot:2.7,carb:28,fat:0.3},{n:'Espárragos',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Yogur 0%',pasos:['Sazona **180g de lubina** con sal, pimienta y limón.', 'Cocina en plancha con AOVE, 4 min por cada lado.', 'Asa **100g de espárragos** en plancha 5 min con AOVE.', 'Sirve con **120g de arroz basmati** cocido.']},
-      {name:'Pechuga de pollo + ensalada de quinoa',tiempo:'20 min',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Quinoa cocida',g:100,u:'g',kcal100:120,prot:4.4,carb:22,fat:1.9},{n:'Pepino',g:80,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Tomate cherry',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Kiwi',pasos:['Sazona **150g de pechuga** y cocina en plancha 5 min por lado.', 'Mezcla **100g de quinoa** cocida + **80g de pepino** en daditos + **80g de tomate cherry** cortado.', 'Aliña la ensalada con **8g de AOVE**, limón y sal.', 'Sirve el pollo sobre la ensalada de quinoa.']},
-      {name:'Dorada al microondas + verduras salteadas',tiempo:'15 min',ings:[{n:'Dorada',g:180,u:'g',kcal100:96,prot:18,carb:0,fat:2.7},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pimiento',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Pera',pasos:['Coloca **180g de dorada** en un recipiente apto para microondas con sal, limón y **4g de AOVE**.', 'Tapa con film y cocina 4 min al 100%. Deja reposar 2 min.', 'Corta **100g de calabacín** y **80g de pimiento** en tiras.', 'Saltea las verduras en **4g de AOVE** 6 min a fuego fuerte.']}
-    ],
-    elaborado:[
-      {name:'Arroz con pollo y pimientos al estilo casero',tiempo:'50 min',dif:'Medio',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Arroz integral',g:80,u:'g',kcal100:370,prot:7.5,carb:76,fat:2.7},{n:'Pimiento rojo y verde',g:120,u:'g',kcal100:30,prot:1,carb:7,fat:0.3},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Naranja',pasos:['Corta **150g de pollo** en trozos y dora en **10g de AOVE** 5 min.', 'Añade **60g de cebolla** picada y **120g de pimientos** en tiras. Sofríe 8 min.', 'Incorpora **100g de tomate** triturado y cocina 5 min.', 'Añade **80g de arroz integral** y el doble de agua. Sazona.', 'Cocina a fuego bajo tapado 40 min hasta que el arroz absorba el líquido.']},
-      {name:'Merluza en salsa verde con almejas',tiempo:'30 min',dif:'Medio',ings:[{n:'Merluza en rodajas',g:200,u:'g',kcal100:86,prot:17,carb:0,fat:1.9},{n:'Almejas',g:80,u:'g',kcal100:74,prot:14,carb:2.5,fat:0.9},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Perejil fresco',g:10,u:'g',kcal100:36,prot:3,carb:6.3,fat:0.8},{n:'Vino blanco',g:30,u:'ml',kcal100:66,prot:0.1,carb:0.6,fat:0},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Gelatina sin azúcar',pasos:['Limpia **80g de almejas** en agua con sal 30 min. Escurre.', 'Pica **10g de ajo** fino. Sofríe en **10g de AOVE** 1 min sin dorar.', 'Añade **30ml de vino blanco** y deja evaporar 2 min.', 'Coloca **200g de merluza** en la sartén. Añade las almejas y **10g de perejil** picado.', 'Mueve suavemente la sartén en círculos para ligar la salsa. Cocina 8 min tapado.']},
-      {name:'Estofado de ternera con zanahorias y patata',tiempo:'60 min',dif:'Medio',ings:[{n:'Ternera para estofar',g:150,u:'g',kcal100:150,prot:21,carb:0,fat:7},{n:'Zanahoria',g:100,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Patata',g:100,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana asada',pasos:['Corta **150g de ternera** en dados y dora en **10g de AOVE** a fuego fuerte 5 min.', 'Añade **60g de cebolla** picada y sofríe 5 min más.', 'Incorpora **100g de zanahoria** y **100g de patata** en trozos, **80g de tomate** triturado.', 'Cubre con agua o caldo, sazona. Tapa y cocina a fuego bajo 50 min.', 'Rectifica de sal y sirve caliente.']},
-      {name:'Caldereta de cordero con patatas',tiempo:'55 min',dif:'Medio',ings:[{n:'Cordero magro',g:150,u:'g',kcal100:172,prot:20,carb:0,fat:10},{n:'Patata',g:150,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Yogur 0%',pasos:['Corta **150g de cordero magro** en dados. Sazona y dora en **10g de AOVE** a fuego fuerte 5 min. Reserva.','Sofríe **60g de cebolla**, **10g de ajo** y **80g de pimiento rojo** picados en la misma cazuela 8 min.','Añade **100g de tomate** triturado y cocina 5 min.','Incorpora el cordero y **150g de patata** en trozos. Cubre con agua.','Tapa y cocina a fuego bajo 35 min hasta que el cordero esté tierno. Rectifica de sal.']},
-      {name:'Fideos con almejas y gambas',tiempo:'35 min',dif:'Medio',ings:[{n:'Fideos integrales',g:80,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Almejas',g:100,u:'g',kcal100:74,prot:14,carb:2.5,fat:0.9},{n:'Gambas',g:100,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'Tomate natural',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Ajo y perejil',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Gelatina',pasos:['Limpia **100g de almejas** en agua salada 30 min.', 'Sofríe **10g de ajo** en **10g de AOVE**. Añade **100g de tomate** triturado, cocina 5 min.', 'Incorpora **80g de fideos integrales** y el doble de agua o caldo de pescado.', 'A mitad de cocción (7 min) añade las almejas y **100g de gambas** peladas.', 'Cocina 7 min más hasta que los fideos estén al dente y las almejas abiertas.']},
-      {name:'Potaje de garbanzos con espinacas',tiempo:'45 min',dif:'Fácil',ings:[{n:'Garbanzos cocidos',g:180,u:'g',kcal100:164,prot:8.9,carb:27,fat:2.6},{n:'Espinacas frescas',g:150,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Comino y pimentón',g:3,u:'g',kcal100:375,prot:18,carb:44,fat:17},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Naranja',pasos:['Sofríe **60g de cebolla** y **80g de tomate** en **10g de AOVE** 8 min.', 'Añade **3g de comino y pimentón**, remueve 1 min.', 'Incorpora **180g de garbanzos** cocidos y **150g de espinacas** frescas.', 'Añade un vaso de agua y cocina tapado 20 min a fuego medio.', 'Rectifica de sal y sirve caliente.']},
-      {name:'Lasaña de pavo y verduras',tiempo:'60 min',dif:'Medio',ings:[{n:'Pechuga de pavo picada',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Láminas de lasaña integral',g:80,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Tomate natural triturado',g:150,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'Queso fresco',g:60,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Yogur 0%',pasos:['Sofríe **60g de calabacín** picado en **8g de AOVE** 5 min. Reserva.', 'En la misma sartén, cocina **150g de pavo picado** hasta dorar, 8 min.', 'Añade **150g de tomate** triturado y cocina 10 min. Mezcla con el calabacín.', 'Monta en bandeja: capa de pasta, carne, pasta, carne. Cubre con **60g de queso fresco**.', 'Hornea a 180°C durante 25 min hasta gratinar.']},
-      {name:'Fideuà de marisco',tiempo:'45 min',dif:'Medio',ings:[{n:'Fideos finos',g:80,u:'g',kcal100:350,prot:12,carb:70,fat:2},{n:'Gambas frescas',g:100,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'Mejillones',g:100,u:'g',kcal100:86,prot:12,carb:3.7,fat:2.2},{n:'Calamar',g:80,u:'g',kcal100:92,prot:16,carb:3,fat:1.4},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Caldo de pescado',g:300,u:'ml',kcal100:8,prot:0.5,carb:1,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Naranja',pasos:['Limpia **100g de mejillones** y **80g de calamar** en rodajas. Pela **100g de gambas**.','Sofríe el calamar en **8g de AOVE** 3 min. Añade **80g de tomate** rallado y sofríe 4 min.','Incorpora **80g de fideos finos** y tuesta ligeramente 2 min.','Vierte **300ml de caldo de pescado** caliente. Añade los mejillones y las gambas.','Cocina a fuego medio 10 min hasta que los fideos absorban el caldo. Deja reposar 3 min.']},
-      {name:'Lentejas estofadas con verduras y cúrcuma',tiempo:'45 min',dif:'Fácil',ings:[{n:'Lentejas pardinas',g:80,u:'g',kcal100:353,prot:26,carb:60,fat:2},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Calabacín',g:80,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cúrcuma',g:2,u:'g',kcal100:354,prot:8,carb:65,fat:10},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Pera',pasos:['Pica **60g de cebolla**, **80g de zanahoria** y **80g de calabacín** en dados pequeños.','Sofríe la cebolla en **8g de AOVE** 5 min. Añade zanahoria y calabacín, cocina 5 min.','Añade **60g de tomate** rallado y **2g de cúrcuma**. Remueve 2 min.','Incorpora **80g de lentejas pardinas** (sin remojar). Cubre con agua o caldo.','Cocina tapado a fuego medio 30 min hasta que las lentejas estén tiernas. Rectifica de sal.']},
-      {name:'Bacalao a la vizcaína',tiempo:'50 min',dif:'Medio',ings:[{n:'Bacalao desalado',g:200,u:'g',kcal100:82,prot:18,carb:0,fat:0.7},{n:'Pimiento choricero seco',g:20,u:'g',kcal100:270,prot:12,carb:50,fat:5},{n:'Cebolla',g:80,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Ajo',g:10,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:10,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 330ml',postre:'Manzana',pasos:['Hidrata **20g de pimiento choricero** seco en agua caliente 20 min. Saca la pulpa raspando con cuchara.','Sofríe **80g de cebolla** y **10g de ajo** picados en **10g de AOVE** a fuego lento 15 min.','Añade **80g de tomate** rallado y la pulpa del pimiento choricero. Cocina 10 min.','Tritura la salsa. Coloca **200g de bacalao** desalado y cúbrelo con la salsa.','Cocina tapado a fuego suave 12 min. Sirve caliente.']}
-    ]
-  },
-  merienda:{
-    rapido:[
-      {name:'Manzana + almendras',tiempo:'2 min',ings:[{n:'Manzana verde',g:150,u:'g',kcal100:52,prot:0.3,carb:14,fat:0.2},{n:'Almendras',g:20,u:'g',kcal100:579,prot:21,carb:22,fat:50}],bebida:'Agua con menta 250ml',pasos:['Precalienta el horno a 200°C.', 'Coloca **120g de patata** en rodajas en la base de la bandeja con **5g de AOVE** y sal.', 'Hornea las patatas 15 min. Coloca encima **200g de rape** limpio.', 'Añade **10g de ajo** laminado, **5g de perejil** y el zumo de **30g de limón**.', 'Hornea 20 min más hasta que el rape esté dorado.']},
-      {name:'Yogur griego 0% con canela',tiempo:'2 min',ings:[{n:'Yogur griego 0%',g:150,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4},{n:'Canela',g:2,u:'g',kcal100:247,prot:4,carb:81,fat:1}],bebida:'Infusión rooibos 250ml',pasos:['Vierte **150g de yogur griego 0%** en un bol.', 'Espolvorea **2g de canela** por encima.', 'Mezcla y sirve. Acompaña con infusión de rooibos.']},
-      {name:'Queso fresco + pepino + tomate',tiempo:'3 min',ings:[{n:'Queso fresco batido 0%',g:125,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'Pepino',g:80,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Tomate cherry',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Agua con limón 250ml',pasos:['Corta **80g de pepino** y **60g de tomate cherry** en rodajas.', 'Sirve con **125g de queso fresco batido 0%** al lado para untar.', 'Acompaña con agua con limón.']},
-      {name:'Kéfir + arándanos',tiempo:'2 min',ings:[{n:'Kéfir natural',g:200,u:'ml',kcal100:61,prot:3.3,carb:4.8,fat:3.5},{n:'Arándanos',g:60,u:'g',kcal100:57,prot:0.7,carb:14,fat:0.3}],bebida:'Té verde 250ml',pasos:['Vierte **200ml de kéfir** en un vaso.', 'Añade **60g de arándanos** frescos por encima.', 'Acompaña con té verde.']},
-      {name:'Tortitas de arroz + aguacate',tiempo:'3 min',ings:[{n:'Tortitas de arroz',g:30,u:'g',kcal100:383,prot:7,carb:82,fat:2},{n:'Aguacate',g:50,u:'g',kcal100:160,prot:2,carb:9,fat:15}],bebida:'Café descafeinado 200ml',pasos:['Chafa **50g de aguacate** con un tenedor. Añade unas gotas de limón y sal.', 'Unta sobre **2 tortitas de arroz (30g)**.', 'Acompaña con café descafeinado.']},
-      {name:'Pera + nueces',tiempo:'2 min',ings:[{n:'Pera',g:150,u:'g',kcal100:57,prot:0.4,carb:15,fat:0.1},{n:'Nueces',g:20,u:'g',kcal100:654,prot:15,carb:14,fat:65}],bebida:'Té manzanilla 250ml',pasos:['Lava y trocea **150g de pera**.', 'Sirve con **20g de nueces** crudas.', 'Acompaña con té de manzanilla.']},
-      {name:'Pepino + zanahoria + hummus',tiempo:'5 min',ings:[{n:'Pepino',g:100,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Hummus light',g:40,u:'g',kcal100:160,prot:7,carb:14,fat:8}],bebida:'Té verde frío 250ml',pasos:['Corta **100g de pepino** y **80g de zanahoria** en palitos.', 'Sirve con **40g de hummus light** para dipear.', 'Acompaña con té verde frío.']},
-      {name:'Plátano + mantequilla de almendra',tiempo:'2 min',ings:[{n:'Plátano',g:100,u:'g',kcal100:89,prot:1.1,carb:23,fat:0.3},{n:'Mantequilla de almendra sin sal',g:15,u:'g',kcal100:614,prot:21,carb:20,fat:56}],bebida:'Agua 250ml',pasos:['Pela **100g de plátano** y córtalo en rodajas.', 'Sirve con **15g de mantequilla de almendra sin sal** para untar.', 'Acompaña con agua.']},
-      {name:'Requesón + miel + nueces',tiempo:'3 min',ings:[{n:'Requesón',g:100,u:'g',kcal100:105,prot:10,carb:4,fat:5},{n:'Nueces',g:15,u:'g',kcal100:654,prot:15,carb:14,fat:65},{n:'Miel',g:8,u:'g',kcal100:304,prot:0.3,carb:82,fat:0}],bebida:'Infusión 250ml',pasos:['Vierte **100g de requesón** en un bol.', 'Añade **15g de nueces** troceadas y **8g de miel** por encima.', 'Mezcla ligeramente. Acompaña con infusión.']},
-      {name:'Pan integral + pavo + tomate',tiempo:'3 min',ings:[{n:'Pan integral',g:40,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Pechuga de pavo fiambre',g:40,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Tomate',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Agua con limón 250ml',pasos:['Tuesta **40g de pan integral**.', 'Coloca **40g de pechuga de pavo** fiambre y **60g de tomate** en rodajas.', 'Acompaña con agua con limón.']}
-    ],
-    elaborado:[
-      {name:'Bowl de frutas con granola casera',tiempo:'30 min',dif:'Fácil',ings:[{n:'Avena tostada',g:40,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Semillas de chía',g:10,u:'g',kcal100:486,prot:17,carb:42,fat:31},{n:'Manzana',g:80,u:'g',kcal100:52,prot:0.3,carb:14,fat:0.2},{n:'Kiwi',g:80,u:'g',kcal100:61,prot:1.1,carb:15,fat:0.5},{n:'Yogur griego 0%',g:100,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4}],bebida:'Té verde frío 250ml',pasos:['Mezcla **40g de avena** + **10g de semillas de chía** en bandeja.', 'Hornea a 160°C 20 min removiendo a mitad. Deja enfriar.', 'Trocea **80g de manzana** y **80g de kiwi**.', 'En un bol, coloca **100g de yogur griego 0%** y cubre con la granola y la fruta.']},
-      {name:'Crema de zanahoria con semillas',tiempo:'25 min',dif:'Fácil',ings:[{n:'Zanahoria',g:200,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Jengibre fresco',g:5,u:'g',kcal100:80,prot:1.8,carb:18,fat:0.8},{n:'Semillas de pipas',g:15,u:'g',kcal100:559,prot:19,carb:18,fat:46},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 250ml',pasos:['Pela y trocea **200g de zanahoria**.', 'Cuece en agua con **5g de jengibre** rallado durante 20 min.', 'Tritura con la batidora hasta obtener crema suave. Ajusta de sal.', 'Sirve en bol con **15g de pipas** por encima y un chorrito de **5g de AOVE**.']},
-      {name:'Tosta de aguacate con huevo y semillas',tiempo:'15 min',dif:'Fácil',ings:[{n:'Pan integral',g:40,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Aguacate',g:50,u:'g',kcal100:160,prot:2,carb:9,fat:15},{n:'Huevo cocido',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Semillas de sésamo',g:5,u:'g',kcal100:573,prot:18,carb:23,fat:50}],bebida:'Té verde 250ml',pasos:['Cuece **60g de huevo** 10 min. Enfría y pela.', 'Tuesta **40g de pan integral**.', 'Chafa **50g de aguacate** y unta sobre el pan.', 'Coloca el huevo en rodajas encima. Espolvorea **5g de sésamo**.']},
-      {name:'Muffins de avena y plátano sin azúcar',tiempo:'35 min',dif:'Fácil',ings:[{n:'Avena cruda',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Plátano maduro',g:100,u:'g',kcal100:89,prot:1.1,carb:23,fat:0.3},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Canela',g:2,u:'g',kcal100:247,prot:4,carb:81,fat:1}],bebida:'Infusión 250ml',pasos:['Precalienta horno a 180°C.', 'Chafa **100g de plátano** maduro. Mezcla con **60g de avena**, **60g de huevo** batido y **2g de canela**.', 'Rellena moldes de muffins a 3/4 de capacidad.', 'Hornea 20 min hasta que estén dorados. Deja enfriar antes de desmoldar.']},
-      {name:'Gazpacho casero con tropezones',tiempo:'20 min',dif:'Fácil',ings:[{n:'Tomate maduro',g:200,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Pepino',g:60,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Pimiento verde',g:40,u:'g',kcal100:20,prot:0.9,carb:4.6,fat:0.2},{n:'Ajo',g:5,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100},{n:'Pan integral tostado picado',g:20,u:'g',kcal100:247,prot:8,carb:41,fat:3}],bebida:'Agua fría 250ml',pasos:['Tritura en batidora: **200g de tomate** + **60g de pepino** + **40g de pimiento verde** + **5g de ajo** + **8g de AOVE** + sal.', 'Añade un chorrito de vinagre y bate 1 min hasta textura fina.', 'Refrigera al menos 30 min.', 'Sirve frío con **20g de pan integral** tostado picado encima.']},
-      {name:'Palitos de verdura con dip de yogur y hierbas',tiempo:'15 min',dif:'Fácil',ings:[{n:'Apio',g:80,u:'g',kcal100:16,prot:0.7,carb:3,fat:0.2},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Pepino',g:80,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Yogur griego 0%',g:100,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4},{n:'Hierbas provenzales',g:3,u:'g',kcal100:101,prot:4,carb:24,fat:2}],bebida:'Agua 250ml',pasos:['Corta **80g de apio**, **80g de zanahoria** y **80g de pepino** en palitos.', 'Mezcla **100g de yogur griego 0%** con **3g de hierbas provenzales**, sal y pimienta.', 'Sirve los palitos con el dip al lado.']},
-      {name:'Pudding de chía con leche y cacao',tiempo:'15 min + reposo',dif:'Fácil',ings:[{n:'Semillas de chía',g:25,u:'g',kcal100:486,prot:17,carb:42,fat:31},{n:'Leche desnatada',g:200,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Cacao puro en polvo',g:8,u:'g',kcal100:228,prot:20,carb:55,fat:14}],bebida:'Agua 250ml',pasos:['Mezcla **25g de semillas de chía** + **200ml de leche desnatada** + **8g de cacao puro**.', 'Remueve bien para que no haya grumos.', 'Refrigera mínimo 2 horas (mejor toda la noche).', 'Sirve frío. La chía habrá absorbido la leche creando textura cremosa.']},
-      {name:'Wrap integral con hummus y verduras',tiempo:'10 min',dif:'Fácil',ings:[{n:'Tortilla integral',g:50,u:'g',kcal100:218,prot:7,carb:41,fat:3},{n:'Hummus',g:50,u:'g',kcal100:160,prot:7,carb:14,fat:8},{n:'Pimiento asado',g:60,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'Rúcula',g:20,u:'g',kcal100:25,prot:2.6,carb:3.7,fat:0.7}],bebida:'Té verde 250ml',pasos:['Extiende **50g de hummus** sobre la **tortilla integral (50g)**.', 'Coloca **60g de pimiento asado** en tiras y **20g de rúcula** encima.', 'Enrolla apretado y corta por la mitad. Acompaña con té verde.']},
-      {name:'Brochetas de frutas con yogur de menta',tiempo:'15 min',dif:'Fácil',ings:[{n:'Fresas',g:80,u:'g',kcal100:32,prot:0.7,carb:7.7,fat:0.3},{n:'Kiwi',g:80,u:'g',kcal100:61,prot:1.1,carb:15,fat:0.5},{n:'Melón',g:100,u:'g',kcal100:34,prot:0.8,carb:8,fat:0.2},{n:'Yogur griego 0%',g:100,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4},{n:'Menta fresca',g:3,u:'g',kcal100:70,prot:3.8,carb:15,fat:0.9}],bebida:'Agua fría 250ml',pasos:['Corta **80g de fresas**, **80g de kiwi** y **100g de melón** en dados.', 'Ensarta en palitos de brocheta alternando frutas.', 'Mezcla **100g de yogur griego 0%** con **3g de menta** fresca picada.', 'Sirve las brochetas con el yogur de menta para dipear.']},
-      {name:'Mini tortilla de patata y cebolla',tiempo:'25 min',dif:'Fácil',ings:[{n:'Huevos',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Patata',g:80,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión 250ml'},
-    ]
-  },
-  cena:{
-    rapido:[
-      {name:'Pavo plancha + brócoli vapor',tiempo:'15 min',ings:[{n:'Pechuga de pavo',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Brócoli al vapor',g:180,u:'g',kcal100:34,prot:2.8,carb:7,fat:0.4},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión de tila 250ml',postre:'Gelatina sin azúcar',pasos:['Pela y corta **80g de patata** en rodajas finas. Pica **40g de cebolla**.', 'Cocina patata y cebolla en **8g de AOVE** a fuego lento 15 min hasta que estén tiernas.', 'Bate **120g de huevos** y mezcla con la patata y cebolla. Salpimenta.', 'Cuaja en sartén pequeña 3 min por cada lado. Sirve tibia.']},
-      {name:'Tortilla de verduras',tiempo:'15 min',ings:[{n:'Huevos enteros',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pimiento',g:80,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Yogur 0%',pasos:['Pica **100g de calabacín** y **80g de pimiento** en daditos pequeños.', 'Saltea en **5g de AOVE** 6 min a fuego medio.', 'Bate **120g de huevos**, mezcla con las verduras y salpimenta.', 'Cuaja en sartén antiadherente 3 min por cada lado a fuego medio-bajo.']},
-      {name:'Sardinas al horno + ensalada',tiempo:'20 min',ings:[{n:'Sardinas frescas',g:150,u:'g',kcal100:208,prot:19,carb:0,fat:11},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Rúcula',g:40,u:'g',kcal100:25,prot:2.6,carb:3.7,fat:0.7},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Té frío sin azúcar 250ml',postre:'Gelatina sin azúcar',pasos:['Precalienta horno a 200°C.', 'Coloca **150g de sardinas** frescas en bandeja con sal, ajo y perejil.', 'Hornea 12 min hasta que estén doradas.', 'Sirve con **100g de tomate** + **40g de rúcula** aliñados con **5g de AOVE**.']},
-      {name:'Boquerones al limón + ensalada verde',tiempo:'15 min',ings:[{n:'Boquerones frescos',g:150,u:'g',kcal100:131,prot:17,carb:0,fat:4.5},{n:'Lechuga variada',g:80,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'Limón',g:20,u:'g',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Kiwi',pasos:['Limpia **150g de boquerones** frescos y coloca en bandeja.', 'Aliña con el zumo de **20g de limón**, sal y pimienta.', 'Hornea a 200°C durante 10 min.', 'Sirve con **80g de lechuga variada** aliñada con **5g de AOVE**.']},
-      {name:'Revuelto de espárragos y gambas',tiempo:'15 min',ings:[{n:'Huevos enteros',g:100,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Espárragos trigueros',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Gambas peladas',g:80,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Gelatina',pasos:['Limpia y corta **100g de espárragos trigueros** en trozos.', 'Saltea en **5g de AOVE** a fuego fuerte 4 min. Añade **80g de gambas** peladas y cocina 2 min más.', 'Bate **100g de huevos** y vierte sobre la mezcla. Remueve suavemente hasta cuajar a fuego bajo.']},
-      {name:'Caballa al limón + ensalada verde',tiempo:'15 min',ings:[{n:'Caballa fresca',g:180,u:'g',kcal100:205,prot:19,carb:0,fat:14},{n:'Limón zumo',g:30,u:'ml',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Lechuga variada',g:80,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Kiwi',pasos:['Sazona **180g de caballa** con sal, pimienta y el zumo de **30ml de limón**.','Cocina en plancha con unas gotas de AOVE, 4 min por cada lado.','Prepara **80g de lechuga variada** + **80g de tomate** en dados.','Aliña la ensalada con **5g de AOVE** y un poco de limón.','Sirve la caballa sobre la ensalada.']},
-      {name:'Crema de calabacín con quesito',tiempo:'15 min',ings:[{n:'Calabacín',g:300,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Quesito light',g:40,u:'g',kcal100:120,prot:6,carb:3,fat:9},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Caldo de verduras',g:200,u:'ml',kcal100:8,prot:0.5,carb:1.5,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina sin azúcar',pasos:['Trocea **300g de calabacín** y **40g de cebolla**.','Sofríe la cebolla en **5g de AOVE** 3 min. Añade el calabacín y rehoga 3 min más.','Vierte **200ml de caldo de verduras** y cocina 8 min hasta que el calabacín esté tierno.','Añade **40g de quesito light** y tritura hasta obtener crema suave.','Sirve caliente con una pizca de pimienta negra.']},
-      {name:'Mejillones al vapor con limón',tiempo:'15 min',ings:[{n:'Mejillones',g:250,u:'g',kcal100:86,prot:12,carb:3.7,fat:2.2},{n:'Limón',g:30,u:'g',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Perejil',g:5,u:'g',kcal100:36,prot:3,carb:6.3,fat:0.8}],bebida:'Infusión manzanilla 250ml',postre:'Pera',pasos:['Limpia **250g de mejillones** frotando las conchas bajo agua fría.', 'Pon en cazuela sin agua, tapa y cocina a fuego fuerte 5-7 min hasta que abran.', 'Desecha los que no hayan abierto.', 'Sirve con zumo de **30g de limón** y **5g de perejil** picado.']},
-      {name:'Sopa de verduras con fideos integrales',tiempo:'20 min',ings:[{n:'Caldo de verduras casero',g:400,u:'ml',kcal100:8,prot:0.5,carb:1.5,fat:0.1},{n:'Fideos integrales',g:50,u:'g',kcal100:350,prot:13,carb:68,fat:2},{n:'Zanahoria',g:60,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Calabacín',g:60,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3}],bebida:'Infusión 250ml',postre:'Gelatina',pasos:['Calienta **400ml de caldo de verduras** en un cazo.', 'Añade **60g de zanahoria** y **60g de calabacín** en daditos.', 'Lleva a ebullición y añade **50g de fideos integrales**.', 'Cocina 8 min hasta que los fideos estén tiernos. Sirve caliente.']},
-      {name:'Pechuga de pollo al limón + ensalada',tiempo:'15 min',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Limón zumo',g:30,u:'ml',kcal100:29,prot:1.1,carb:9,fat:0.3},{n:'Lechuga variada',g:100,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Yogur 0%',pasos:['Marina **150g de pechuga** con el zumo de **30ml de limón**, sal y pimienta 10 min.', 'Cocina en plancha 5 min por cada lado.', 'Prepara **100g de lechuga variada** aliñada con **5g de AOVE**.', 'Sirve el pollo sobre la ensalada.']}
-    ],
-    elaborado:[
-      {name:'Crema de calabaza con gambas salteadas',tiempo:'35 min',dif:'Fácil',ings:[{n:'Calabaza',g:300,u:'g',kcal100:26,prot:1,carb:6,fat:0.1},{n:'Gambas peladas',g:100,u:'g',kcal100:85,prot:18,carb:0.5,fat:1},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Jengibre',g:5,u:'g',kcal100:80,prot:1.8,carb:18,fat:0.8},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina sin azúcar',pasos:['Pica **300g de calabaza**, **60g de cebolla** y el **5g de jengibre**.', 'Sofríe cebolla en **8g de AOVE** 5 min. Añade calabaza y jengibre. Cubre con agua.', 'Cocina 20 min hasta que la calabaza esté tierna. Tritura hasta obtener crema suave.', 'Saltea **100g de gambas** peladas en AOVE con sal 3 min.', 'Sirve la crema con las gambas por encima.']},
-      {name:'Pisto manchego con huevo pochado',tiempo:'35 min',dif:'Fácil',ings:[{n:'Calabacín',g:150,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pimiento rojo y verde',g:120,u:'g',kcal100:30,prot:1,carb:7,fat:0.3},{n:'Tomate maduro',g:150,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Huevo entero',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Yogur 0%',pasos:['Pica **150g de calabacín**, **120g de pimientos**, **150g de tomate** y **60g de cebolla**.', 'Sofríe cebolla en **8g de AOVE** 5 min. Añade pimientos 5 min. Incorpora calabacín 5 min.', 'Añade el tomate y cocina tapado 15 min a fuego bajo. Salpimenta.', 'Pon agua a hervir con vinagre. Pocha **60g de huevo** 3 min.', 'Sirve el pisto con el huevo pochado encima.']},
-      {name:'Merluza al horno con verduras mediterráneas',tiempo:'40 min',dif:'Fácil',ings:[{n:'Merluza',g:200,u:'g',kcal100:86,prot:17,carb:0,fat:1.9},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:60,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Pimiento',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Aceitunas sin sal',g:20,u:'g',kcal100:145,prot:1,carb:3.8,fat:15},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Gelatina',pasos:['Precalienta horno a 180°C.', 'Coloca **100g de cebolla** y **80g de pimiento** en rodajas en la base de la bandeja con AOVE.', 'Hornea las verduras 10 min. Coloca **200g de merluza** encima.', 'Añade **100g de tomate** en rodajas, **20g de aceitunas** y **8g de AOVE**.', 'Hornea 20 min más. Sirve caliente.']},
-      {name:'Calabacines rellenos de pavo y verduras',tiempo:'45 min',dif:'Medio',ings:[{n:'Calabacín grande',g:300,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pechuga de pavo picada',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Tomate natural',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Queso fresco rallado',g:30,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Yogur 0%',pasos:['Corta **300g de calabacín** por la mitad longitudinalmente. Vacía con cuchara.', 'Pica la pulpa. Sofríe **40g de cebolla** en **8g de AOVE** 3 min. Añade **150g de pavo picado**.', 'Cocina 8 min. Añade **80g de tomate** triturado y la pulpa del calabacín 5 min.', 'Rellena las mitades de calabacín. Cubre con **30g de queso fresco** rallado.', 'Hornea a 180°C durante 25 min hasta gratinar.']},
-      {name:'Crema de puerros con vieiras',tiempo:'35 min',dif:'Medio',ings:[{n:'Puerro',g:200,u:'g',kcal100:31,prot:1.5,carb:7.2,fat:0.3},{n:'Vieiras',g:100,u:'g',kcal100:88,prot:17,carb:3.2,fat:0.8},{n:'Patata',g:80,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Leche desnatada',g:100,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Gelatina',pasos:['Limpia y corta **200g de puerro** en rodajas. Pela **80g de patata**.', 'Sofríe el puerro en **8g de AOVE** 8 min. Añade la patata y cubre con agua.', 'Cocina 20 min. Añade **100ml de leche desnatada** y tritura hasta crema fina.', 'Marca **100g de vieiras** en sartén muy caliente con AOVE, 1 min por lado.', 'Sirve la crema con las vieiras encima.']},
-      {name:'Huevos a la flamenca con verduras',tiempo:'30 min',dif:'Fácil',ings:[{n:'Huevos',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Tomate natural triturado',g:150,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'Pimiento rojo',g:80,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Guisantes',g:60,u:'g',kcal100:81,prot:5.4,carb:14,fat:0.4},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua 250ml',postre:'Yogur 0%',pasos:['Sofríe **60g de cebolla** y **80g de pimiento** picados en **8g de AOVE** 8 min.', 'Añade **150g de tomate** triturado y **60g de guisantes**. Cocina 10 min.', 'Hace hueco y casca **120g de huevos** directamente sobre el sofrito.', 'Tapa y cocina a fuego bajo 5-8 min hasta que las claras cuajen pero las yemas queden líquidas.']},
-      {name:'Sopa de ajo castellana light',tiempo:'30 min',dif:'Fácil',ings:[{n:'Ajo',g:15,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'Pan integral duro',g:40,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pimentón',g:3,u:'g',kcal100:282,prot:14,carb:54,fat:13},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina',pasos:['Lamina **15g de ajo** y sofríe en **8g de AOVE** hasta dorar ligeramente.', 'Añade **3g de pimentón** fuera del fuego (para que no se queme). Remueve.', 'Incorpora **40g de pan integral** duro en trozos y cubre con agua caliente.', 'Lleva a ebullición y casca **60g de huevo** dentro. Cocina 3 min.', 'Sirve caliente con perejil picado.']},
-      {name:'Tatín de verduras con huevo',tiempo:'35 min',dif:'Fácil',ings:[{n:'Huevos',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pimiento rojo',g:100,u:'g',kcal100:31,prot:1,carb:7,fat:0.3},{n:'Calabacín',g:80,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Cebolla',g:80,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate cherry',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Gelatina',pasos:['Precalienta horno a 180°C.','Corta **80g de cebolla**, **100g de pimiento** y **80g de calabacín** en rodajas finas.','Saltea todas las verduras en **8g de AOVE** 8 min a fuego medio.','Coloca las verduras en molde de horno. Añade **60g de tomate cherry** cortado por la mitad.','Bate **120g de huevos**, salpimenta y vierte sobre las verduras. Hornea 20 min hasta cuajar.']},
-      {name:'Rollitos de pavo con espinacas al horno',tiempo:'35 min',dif:'Fácil',ings:[{n:'Filetes de pechuga de pavo',g:180,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Espinacas frescas',g:100,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Queso fresco',g:40,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'Ajo',g:5,u:'g',kcal100:149,prot:6.4,carb:33,fat:0.5},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Yogur 0%',pasos:['Precalienta el horno a 180°C.','Saltea **100g de espinacas** con **5g de ajo** picado en **8g de AOVE** 3 min. Escurre bien.','Extiende **180g de filetes de pavo** finos. Coloca espinacas y **40g de queso fresco** desmenuzado encima.','Enrolla cada filete y sujeta con un palillo. Coloca en bandeja de horno.','Hornea 20 min hasta que estén dorados. Retira los palillos y sirve.']},
-      {name:'Espárragos gratinados con jamón y huevo',tiempo:'25 min',dif:'Fácil',ings:[{n:'Espárragos trigueros',g:200,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Jamón serrano sin sal añadida',g:40,u:'g',kcal100:143,prot:25,carb:0.5,fat:4.5},{n:'Huevo',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Queso fresco rallado',g:20,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión manzanilla 250ml',postre:'Pera',pasos:['Precalienta el horno a 200°C con grill.','Limpia **200g de espárragos** trigueros y coloca en bandeja con **5g de AOVE**.','Asa 10 min en horno. Saca y coloca **40g de jamón serrano** en lonchas encima.','Casca **60g de huevo** sobre los espárragos y espolvorea **20g de queso fresco** rallado.','Gratina 5-7 min hasta que el huevo cuaje y el queso se dore. Sirve inmediatamente.']}
-    ]
-  }
+  desayuno:[
+    {name:'Yogur griego + avena + arándanos',ings:[{n:'Yogur griego natural',g:150,u:'g',kcal100:97,prot:9,carb:4,fat:5},{n:'Avena cruda',g:40,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Arándanos frescos',g:80,u:'g',kcal100:57,prot:0.7,carb:14,fat:0.3}],bebida:'Té verde 250ml sin azúcar'},
+    {name:'Tortilla claras + espinacas',ings:[{n:'Claras de huevo',g:120,u:'g',kcal100:52,prot:11,carb:0.7,fat:0.2},{n:'Yema de huevo',g:18,u:'g',kcal100:322,prot:16,carb:1,fat:27},{n:'Espinacas frescas',g:60,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Café solo sin azúcar 200ml'},
+    {name:'Pan integral + aguacate + tomate',ings:[{n:'Pan integral',g:50,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Aguacate',g:60,u:'g',kcal100:160,prot:2,carb:9,fat:15},{n:'Tomate',g:80,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Infusión jengibre 250ml'},
+    {name:'Queso cottage + fresas + lino',ings:[{n:'Queso cottage',g:150,u:'g',kcal100:98,prot:11,carb:3.4,fat:4.3},{n:'Fresas',g:100,u:'g',kcal100:32,prot:0.7,carb:7.7,fat:0.3},{n:'Semillas de lino',g:10,u:'g',kcal100:534,prot:18,carb:29,fat:42}],bebida:'Café con leche desnatada 200ml'},
+    {name:'Porridge avena con manzana',ings:[{n:'Avena en copos',g:60,u:'g',kcal100:389,prot:13,carb:66,fat:7},{n:'Leche desnatada',g:200,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Manzana',g:80,u:'g',kcal100:52,prot:0.3,carb:14,fat:0.2},{n:'Canela',g:2,u:'g',kcal100:247,prot:4,carb:81,fat:1}],bebida:'Té manzanilla 250ml'},
+    {name:'Kéfir + nueces + kiwi',ings:[{n:'Kéfir natural',g:200,u:'ml',kcal100:61,prot:3.3,carb:4.8,fat:3.5},{n:'Nueces',g:25,u:'g',kcal100:654,prot:15,carb:14,fat:65},{n:'Kiwi',g:100,u:'g',kcal100:61,prot:1.1,carb:15,fat:0.5}],bebida:'Agua con limón 300ml'},
+    {name:'Huevo cocido + pan centeno + tomate',ings:[{n:'Huevo entero',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pan de centeno',g:40,u:'g',kcal100:259,prot:9,carb:48,fat:2},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2}],bebida:'Café con leche desnatada 200ml'},
+    {name:'Smoothie proteico + fruta',ings:[{n:'Leche desnatada',g:200,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Plátano pequeño',g:80,u:'g',kcal100:89,prot:1.1,carb:23,fat:0.3},{n:'Avena cruda',g:30,u:'g',kcal100:389,prot:13,carb:66,fat:7}],bebida:'Agua con limón 200ml'},
+    {name:'Tostada integral + pavo + queso fresco',ings:[{n:'Pan integral tostado',g:50,u:'g',kcal100:247,prot:8,carb:41,fat:3},{n:'Pechuga de pavo',g:50,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Queso fresco 0%',g:40,u:'g',kcal100:45,prot:7,carb:3,fat:0.2}],bebida:'Té verde 250ml'},
+    {name:'Muesli sin azúcar + leche + fresas',ings:[{n:'Muesli sin azúcar',g:50,u:'g',kcal100:350,prot:9,carb:60,fat:6},{n:'Leche desnatada',g:150,u:'ml',kcal100:35,prot:3.4,carb:5,fat:0.1},{n:'Fresas',g:80,u:'g',kcal100:32,prot:0.7,carb:7.7,fat:0.3}],bebida:'Infusión manzanilla 250ml'},
+  ],
+  comida:[
+    {name:'Pollo plancha + arroz integral + ensalada',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Arroz integral cocido',g:120,u:'g',kcal100:123,prot:2.7,carb:26,fat:0.9},{n:'Lechuga + tomate',g:100,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Naranja 1 ud. (150g)'},
+    {name:'Merluza al horno + quinoa + brócoli',ings:[{n:'Merluza',g:180,u:'g',kcal100:86,prot:17,carb:0,fat:1.9},{n:'Quinoa cocida',g:100,u:'g',kcal100:120,prot:4.4,carb:22,fat:1.9},{n:'Brócoli al vapor',g:150,u:'g',kcal100:34,prot:2.8,carb:7,fat:0.4},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua infusionada pepino 300ml',postre:'Gelatina sin azúcar 1 ud.'},
+    {name:'Lentejas con verduras',ings:[{n:'Lentejas cocidas',g:180,u:'g',kcal100:116,prot:9,carb:20,fat:0.4},{n:'Zanahoria',g:60,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Cebolla',g:50,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Tomate',g:60,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 300ml',postre:'2 mandarinas (200g)'},
+    {name:'Salmón plancha + boniato + judías',ings:[{n:'Salmón fresco',g:150,u:'g',kcal100:208,prot:20,carb:0,fat:13},{n:'Boniato asado',g:120,u:'g',kcal100:90,prot:1.6,carb:21,fat:0.1},{n:'Judías verdes',g:120,u:'g',kcal100:31,prot:1.8,carb:7,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Té frío sin azúcar 300ml',postre:'Yogur 0% (125g)'},
+    {name:'Pavo tomate casero + pasta integral',ings:[{n:'Pechuga de pavo',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Pasta integral cocida',g:120,u:'g',kcal100:124,prot:5,carb:26,fat:1},{n:'Tomate natural triturado',g:100,u:'g',kcal100:24,prot:1.1,carb:5,fat:0.2},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua mineral 330ml',postre:'Pera 1 ud. (150g)'},
+    {name:'Bacalao light + patata + pimientos',ings:[{n:'Bacalao desalado',g:160,u:'g',kcal100:82,prot:18,carb:0,fat:0.7},{n:'Patata cocida',g:100,u:'g',kcal100:77,prot:2,carb:17,fat:0.1},{n:'Pimientos asados',g:100,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Manzana verde 1 ud. (150g)'},
+    {name:'Garbanzos con espinacas',ings:[{n:'Garbanzos cocidos',g:150,u:'g',kcal100:164,prot:9,carb:27,fat:2.6},{n:'Espinacas',g:100,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'Cebolla',g:50,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 300ml',postre:'Kiwi 1 ud. (100g)'},
+    {name:'Lubina al vapor + arroz basmati + zanahoria',ings:[{n:'Lubina',g:180,u:'g',kcal100:97,prot:18,carb:0,fat:2.5},{n:'Arroz basmati cocido',g:100,u:'g',kcal100:130,prot:2.7,carb:28,fat:0.3},{n:'Zanahoria',g:100,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua mineral 330ml',postre:'Naranja 1 ud.'},
+    {name:'Pollo al curry + verduras salteadas',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Pimientos',g:80,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con gas 330ml',postre:'Yogur 0% (125g)'},
+    {name:'Atún plancha + ensalada grande',ings:[{n:'Atún fresco',g:150,u:'g',kcal100:144,prot:23,carb:0,fat:5},{n:'Lechuga',g:80,u:'g',kcal100:15,prot:1.2,carb:2.9,fat:0.2},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Pepino',g:80,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'AOVE',g:8,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua mineral 330ml',postre:'Pera 1 ud.'},
+  ],
+  merienda:[
+    {name:'Pepino + zanahoria + hummus',ings:[{n:'Pepino',g:100,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1},{n:'Zanahoria',g:80,u:'g',kcal100:41,prot:0.9,carb:10,fat:0.2},{n:'Hummus light',g:40,u:'g',kcal100:160,prot:7,carb:14,fat:8}],bebida:'Té verde frío 250ml'},
+    {name:'Manzana verde + almendras',ings:[{n:'Manzana verde',g:150,u:'g',kcal100:52,prot:0.3,carb:14,fat:0.2},{n:'Almendras',g:20,u:'g',kcal100:579,prot:21,carb:22,fat:50}],bebida:'Agua con menta 250ml'},
+    {name:'Yogur griego 0% con canela',ings:[{n:'Yogur griego 0%',g:150,u:'g',kcal100:59,prot:10,carb:3.6,fat:0.4},{n:'Canela',g:2,u:'g',kcal100:247,prot:4,carb:81,fat:1}],bebida:'Infusión rooibos 250ml'},
+    {name:'Queso fresco batido + pepino',ings:[{n:'Queso fresco batido 0%',g:125,u:'g',kcal100:45,prot:7,carb:3,fat:0.2},{n:'Pepino',g:80,u:'g',kcal100:16,prot:0.7,carb:3.6,fat:0.1}],bebida:'Agua con limón 250ml'},
+    {name:'Tortitas de arroz + aguacate',ings:[{n:'Tortitas de arroz',g:30,u:'g',kcal100:383,prot:7,carb:82,fat:2},{n:'Aguacate',g:50,u:'g',kcal100:160,prot:2,carb:9,fat:15}],bebida:'Café descafeinado 200ml'},
+    {name:'Pera + nueces',ings:[{n:'Pera',g:150,u:'g',kcal100:57,prot:0.4,carb:15,fat:0.1},{n:'Nueces',g:20,u:'g',kcal100:654,prot:15,carb:14,fat:65}],bebida:'Té manzanilla 250ml'},
+    {name:'Kiwi + semillas de chía',ings:[{n:'Kiwi',g:150,u:'g',kcal100:61,prot:1.1,carb:15,fat:0.5},{n:'Semillas de chía',g:10,u:'g',kcal100:486,prot:17,carb:42,fat:31}],bebida:'Agua con limón 250ml'},
+    {name:'Gelatina sin azúcar + frutos rojos',ings:[{n:'Gelatina sin azúcar',g:100,u:'g',kcal100:10,prot:1.6,carb:1,fat:0},{n:'Arándanos',g:60,u:'g',kcal100:57,prot:0.7,carb:14,fat:0.3}],bebida:'Infusión tila 250ml'},
+    {name:'Naranja + pistachos',ings:[{n:'Naranja',g:150,u:'g',kcal100:47,prot:0.9,carb:12,fat:0.1},{n:'Pistachos',g:20,u:'g',kcal100:562,prot:20,carb:28,fat:45}],bebida:'Té verde 250ml'},
+    {name:'Requesón + membrillo sin azúcar',ings:[{n:'Requesón',g:100,u:'g',kcal100:74,prot:7,carb:4,fat:3.8},{n:'Membrillo sin azúcar',g:30,u:'g',kcal100:40,prot:0.3,carb:10,fat:0.1}],bebida:'Agua con gas 250ml'},
+  ],
+  cena:[
+    {name:'Pavo plancha + brócoli vapor',ings:[{n:'Pechuga de pavo',g:150,u:'g',kcal100:104,prot:22,carb:0,fat:1.6},{n:'Brócoli al vapor',g:180,u:'g',kcal100:34,prot:2.8,carb:7,fat:0.4},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión de tila 250ml',postre:'Gelatina sin azúcar 1 ud.'},
+    {name:'Crema de calabaza + huevo',ings:[{n:'Calabaza',g:250,u:'g',kcal100:26,prot:1,carb:6,fat:0.1},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'Huevo entero',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Manzanilla 250ml',postre:'Kiwi 1 ud. (100g)'},
+    {name:'Tortilla de verduras',ings:[{n:'Huevos enteros',g:120,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Pimientos',g:80,u:'g',kcal100:28,prot:1,carb:6,fat:0.3},{n:'Calabacín',g:100,u:'g',kcal100:17,prot:1.2,carb:3.1,fat:0.3},{n:'Cebolla',g:40,u:'g',kcal100:40,prot:1.1,carb:9,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Agua con limón 250ml',postre:'Yogur 0% (125g)'},
+    {name:'Sardinas al horno + ensalada',ings:[{n:'Sardinas frescas',g:150,u:'g',kcal100:208,prot:19,carb:0,fat:11},{n:'Tomate',g:100,u:'g',kcal100:18,prot:0.9,carb:3.9,fat:0.2},{n:'Rúcula',g:40,u:'g',kcal100:25,prot:2.6,carb:3.7,fat:0.7},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Té frío sin azúcar 250ml',postre:'Gelatina sin azúcar 1 ud.'},
+    {name:'Sopa verduras + pollo hervido',ings:[{n:'Caldo verduras casero',g:300,u:'ml',kcal100:8,prot:0.5,carb:1.5,fat:0.1},{n:'Verduras variadas',g:150,u:'g',kcal100:30,prot:2,carb:6,fat:0.3},{n:'Pechuga de pollo',g:100,u:'g',kcal100:110,prot:23,carb:0,fat:2.6}],bebida:'Infusión manzanilla 250ml',postre:'2 ciruelas (100g)'},
+    {name:'Dorada plancha + espárragos + champiñones',ings:[{n:'Dorada',g:180,u:'g',kcal100:96,prot:18,carb:0,fat:2.7},{n:'Espárragos',g:100,u:'g',kcal100:20,prot:2.2,carb:3.9,fat:0.1},{n:'Champiñones',g:100,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión de tila 250ml',postre:'Manzana asada con canela (150g)'},
+    {name:'Revuelto de setas + espinacas',ings:[{n:'Huevos enteros',g:100,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Setas',g:150,u:'g',kcal100:22,prot:3.1,carb:3.3,fat:0.3},{n:'Espinacas',g:80,u:'g',kcal100:23,prot:2.9,carb:3.6,fat:0.4},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Gelatina sin azúcar 1 ud.'},
+    {name:'Gazpacho + huevo duro + atún',ings:[{n:'Gazpacho casero',g:250,u:'ml',kcal100:30,prot:1,carb:5,fat:1},{n:'Huevo duro',g:60,u:'g',kcal100:155,prot:13,carb:1.1,fat:11},{n:'Atún al natural',g:80,u:'g',kcal100:116,prot:26,carb:0,fat:1}],bebida:'Agua con limón 250ml',postre:'Kiwi 1 ud.'},
+    {name:'Caballa al horno + judías verdes',ings:[{n:'Caballa',g:150,u:'g',kcal100:205,prot:19,carb:0,fat:14},{n:'Judías verdes',g:150,u:'g',kcal100:31,prot:1.8,carb:7,fat:0.1},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Manzanilla 250ml',postre:'Yogur 0% (125g)'},
+    {name:'Pollo al limón + coliflor vapor',ings:[{n:'Pechuga de pollo',g:150,u:'g',kcal100:110,prot:23,carb:0,fat:2.6},{n:'Coliflor',g:180,u:'g',kcal100:25,prot:1.9,carb:5,fat:0.3},{n:'AOVE',g:5,u:'g',kcal100:884,prot:0,carb:0,fat:100}],bebida:'Infusión tila 250ml',postre:'Naranja pequeña (100g)'},
+  ]
 };
 
 const postGym=[
@@ -408,8 +273,6 @@ const frases=[
   {text:'El gimnasio a los 64 no es un lujo, es la mejor inversión en tu futuro.',autor:'Longevidad activa'},
   {text:'No pierdes peso de golpe. Lo pierdes kilo a kilo, comida a comida, día a día.',autor:'Paciencia y constancia'},
   {text:'Tu cuerpo cambia más lento de lo que quieres, pero más de lo que crees.',autor:'Proceso real'},
-  {text:'Cocinar para ti mismo es el acto más poderoso de autocuidado.',autor:'Alimentación consciente'},
-  {text:'La constancia hace lo que el talento no puede.',autor:'Disciplina diaria'},
 ];
 
 const consejos=[
@@ -419,7 +282,7 @@ const consejos=[
     {type:'good',icon:'ti-check',text:'Prioriza bajo índice glucémico: legumbres, avena, verduras, proteínas magras.'},
     {type:'bad',icon:'ti-x',text:'Evita azúcar añadido, harinas refinadas, zumos envasados y ultraprocesados.'},
     {type:'bad',icon:'ti-x',text:'No saltes comidas. El ayuno excesivo dispara el cortisol y frena la quema de grasa.'},
-    {type:'warn',icon:'ti-clock',text:'Horarios fijos para cada comida. El metabolismo agradece la rutina.'},
+    {type:'warn',icon:'ti-clock',text:'Horarios fijos para desayuno, comida, merienda y cena. El metabolismo agradece la rutina.'},
   ]},
   {cat:'Hidratación',icon:'💧',color:'#378ADD',items:[
     {type:'good',icon:'ti-check',text:'Bebe 2–2,5 litros de agua al día. Clave para quemar grasa correctamente.'},
@@ -435,101 +298,68 @@ const consejos=[
     {type:'warn',icon:'ti-alert-triangle',text:'Si sientes mareo o debilidad, para y toma algo con hidratos rápidos (fruta).'},
     {type:'good',icon:'ti-check',text:'Días sin gym: camina al menos 30 minutos para mantenerte activo.'},
   ]},
-  {cat:'Trucos de cocina saludable',icon:'🍳',color:'#EF9F27',items:[
-    {type:'good',icon:'ti-check',text:'Cocina en cantidad los domingos: arroz, legumbres, verduras asadas. Ahorras tiempo toda la semana.'},
-    {type:'good',icon:'ti-check',text:'Usa especias y hierbas para dar sabor sin sal: cúrcuma, comino, pimentón, ajo, laurel.'},
-    {type:'good',icon:'ti-check',text:'El AOVE es tu aliado: usa poco pero de calidad. 1 cucharada sopera = 10g = 90 kcal.'},
-    {type:'warn',icon:'ti-alert-triangle',text:'Reducir la sal no significa comer soso. Las hierbas aromáticas cambian todo.'},
-    {type:'good',icon:'ti-check',text:'El vapor y el horno son tus mejores técnicas. Conservan nutrientes y usan menos grasa.'},
+  {cat:'Alimentos a evitar',icon:'🚫',color:'#D85A30',items:[
+    {type:'bad',icon:'ti-x',text:'Sal añadida y embutidos: suben la tensión. Usa especias y hierbas.'},
+    {type:'bad',icon:'ti-x',text:'Fritos y rebozados. Plancha, horno o vapor siempre.'},
+    {type:'bad',icon:'ti-x',text:'Bollería, galletas, azúcar blanco, miel en exceso y refrescos azucarados.'},
+    {type:'warn',icon:'ti-alert-triangle',text:'Limita fruta muy dulce (plátano, uva, mango) a 1 pieza pequeña al día.'},
+  ]},
+  {cat:'Motivación y hábitos diarios',icon:'❤️',color:'#EF9F27',items:[
+    {type:'star',icon:'ti-star',text:'Pésate cada lunes en ayunas. Solo una vez a la semana evita la desmotivación.'},
+    {type:'star',icon:'ti-star',text:'Fotografía tu cuerpo cada 2 semanas. Los cambios visuales llegan antes que los del peso.'},
+    {type:'star',icon:'ti-star',text:'Duerme mínimo 7 horas. La falta de sueño dispara el hambre y frena la pérdida de grasa.'},
+    {type:'star',icon:'ti-star',text:'Un día a la semana: comida libre moderada. Es sostenibilidad, no trampa.'},
+    {type:'star',icon:'ti-star',text:'Celebra cada kilo perdido. Con 108 kg de partida, cada kilo es un logro real.'},
+  ]},
+  {cat:'Trucos que funcionan',icon:'💡',color:'#EF9F27',items:[
+    {type:'good',icon:'ti-check',text:'Come despacio. El cerebro tarda 20 min en recibir la señal de saciedad.'},
+    {type:'good',icon:'ti-check',text:'Platos más pequeños: reduces cantidad sin notarlo.'},
+    {type:'good',icon:'ti-check',text:'Cocina en cantidad el fin de semana: arroz, legumbres y proteína para toda la semana.'},
+    {type:'good',icon:'ti-check',text:'Snacks sanos siempre a mano: yogur, fruta, nueces.'},
+    {type:'good',icon:'ti-check',text:'Lee etiquetas: menos de 5g azúcar y menos de 1g sal por 100g.'},
   ]},
 ];
 
-// ===== INIT =====
-function init(){
-  try{
-    const saved=localStorage.getItem('menuBoniPlan');
-    weekPlan=saved?JSON.parse(saved):dias.map(()=>generateDayPlan());
-  } catch(e){
-    weekPlan=dias.map(()=>generateDayPlan());
-  }
+function randomMenu(){
+  const p={};
+  comidas.forEach(c=>{const s=[...menus[c]].sort(()=>Math.random()-0.5);p[c]={options:s,selected:0};});
+  const pg=[...postGym].sort(()=>Math.random()-0.5);
+  p.postgym={options:pg,selected:0};
+  return p;
+}
+
+function initWeek(){
+  weekPlan=dias.map(()=>randomMenu());
+  openMeals={};
+  currentDay=-1;
   renderDays();
+  document.getElementById('dayPanel').classList.remove('open');
+  document.getElementById('shopPanel').style.display='none';
+  document.getElementById('shopList').innerHTML='';
 }
 
-function generateDayPlan(){
-  const plan={};
-  comidas.forEach(c=>{
-    plan[c]={
-      rapido:rnd(menus[c].rapido),
-      elaborado:rnd(menus[c].elaborado)
-    };
-  });
-  return plan;
-}
+function totalKcalDay(p){return comidas.reduce((s,c)=>s+kcalFromIng(p[c].options[p[c].selected].ings),0);}
+function totalProtDay(p){return comidas.reduce((s,c)=>s+protFromIng(p[c].options[p[c].selected].ings),0);}
+function totalCarbDay(p){return comidas.reduce((s,c)=>s+carbFromIng(p[c].options[p[c].selected].ings),0);}
+function totalFatDay(p){return comidas.reduce((s,c)=>s+fatFromIng(p[c].options[p[c].selected].ings),0);}
 
-function savePlan(){try{localStorage.setItem('menuBoniPlan',JSON.stringify(weekPlan));}catch(e){}}
-
-function totalKcal(dayPlan,type){
-  return comidas.reduce((s,c)=>{
-    const t=dayPlan[c].tipo||type||'rapido';
-    const m=dayPlan[c][t];
-    return s+(m?kcalFromIng(m.ings):0);
-  },0);
-}
-
-// ===== RENDER DAYS =====
 function renderDays(){
-  const grid=document.getElementById('daysGrid');
-  grid.innerHTML=dias.map((d,i)=>{
-    const plan=weekPlan[i];
-    const kcal=totalKcal(plan,'rapido');
-    const isGym=diasGym.includes(i);
-    const isDone=false;
-    const isActive=i===currentDay;
-    return `<div class="day-card${isGym?' gym':''}${isDone?' done':''}${isActive?' active-day':''}" onclick="openDay(${i})">
-      <div class="day-name">${d.slice(0,3)}</div>
-      <div class="day-kcal">${kcal} kcal</div>
-      <div class="day-sub">${isGym?'<span style="color:var(--gold)">🏋️</span>':''}</div>
+  document.getElementById('daysGrid').innerHTML=dias.map((d,i)=>{
+    const k=totalKcalDay(weekPlan[i]);const isGym=diasGym.includes(i);
+    return `<div class="day-card ${isGym?'gym':''} ${i===currentDay?'active-day':''}" onclick="selectDay(${i})">
+      <div class="day-name">${d.substring(0,3)}</div>
+      <div class="day-kcal">${k} kcal</div>
+      <div class="day-sub" style="color:${isGym?'#EF9F27':'transparent'}">${isGym?'🏋️':'-'}</div>
     </div>`;
   }).join('');
 }
 
-// ===== OPEN DAY =====
-function openDay(i){
-  currentDay=i;
-  openMeals={};
-  // Inicializar historial si no existe para este día
-  if(!mealHistory[i]){
-    mealHistory[i]={};
-    comidas.forEach(c=>{
-      mealHistory[i][c]={
-        rapido:[weekPlan[i][c].rapido],
-        elaborado:[weekPlan[i][c].elaborado],
-        posRapido:0,
-        posElaborado:0
-      };
-    });
-  }
+function selectDay(di){
+  currentDay=di;
   renderDays();
-  const panel=document.getElementById('dayPanel');
-  panel.classList.add('open');
-  const isGym=diasGym.includes(i);
-  document.getElementById('dayPanelTitle').innerHTML=
-    `${dias[i]} ${isGym?'<span style="font-size:18px">🏋️</span>':''}`;
-  renderDayContent();
-  panel.scrollIntoView({behavior:'smooth'});
-}
-
-function navMeal(comida, dir){
-  const tipo=weekPlan[currentDay][comida].tipo||'rapido';
-  const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
-  if(!h) return;
-  const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
-  const newPos=h[posKey]+dir;
-  if(newPos<0||newPos>=h[tipo].length) return;
-  h[posKey]=newPos;
-  weekPlan[currentDay][comida][tipo]=h[tipo][newPos];
-  savePlan();
-  renderDayContent();
+  renderDayPanel(di);
+  document.getElementById('dayPanel').classList.add('open');
+  document.getElementById('dayPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function closeDay(){
@@ -538,627 +368,200 @@ function closeDay(){
   renderDays();
 }
 
-// type per meal - no global setter needed
+function renderDayPanel(di){
+  const p=weekPlan[di];const isGym=diasGym.includes(di);
+  const k=totalKcalDay(p),pr=totalProtDay(p),ca=totalCarbDay(p),fa=totalFatDay(p);
+  document.getElementById('dayPanelTitle').innerHTML=`${isGym?'🏋️ ':''}Menú del ${dias[di]}`;
+  document.getElementById('dayStats').innerHTML=`
+    <div class="stat-pill"><div class="val">${k}</div><div class="lbl">Kcal</div></div>
+    <div class="stat-pill"><div class="val">${pr}g</div><div class="lbl">Proteína</div></div>
+    <div class="stat-pill"><div class="val">${ca}g</div><div class="lbl">Carbos</div></div>
+    <div class="stat-pill"><div class="val">${fa}g</div><div class="lbl">Grasas</div></div>`;
 
-function renderDayContent(){
-  const plan=weekPlan[currentDay];
-  const isGym=diasGym.includes(currentDay);
-  const types=comidas.map(c=>plan[c].tipo||'rapido');
-  const totalKc=comidas.reduce((s,c,i)=>s+kcalFromIng(plan[c][types[i]].ings),0);
-  const allIngs=comidas.flatMap((c,i)=>plan[c][types[i]].ings);
-  const prot=protFromIng(allIngs), carb=carbFromIng(allIngs), fat=fatFromIng(allIngs);
-  document.getElementById('dayStats').innerHTML=
-    `<div class="stat-pill"><div class="val">${totalKc}</div><div class="lbl">kcal</div></div>
-     <div class="stat-pill"><div class="val">${prot}g</div><div class="lbl">prot</div></div>
-     <div class="stat-pill"><div class="val">${carb}g</div><div class="lbl">carb</div></div>
-     <div class="stat-pill"><div class="val">${fat}g</div><div class="lbl">grasa</div></div>`;
-  let html=comidas.map((c,i)=>renderMeal(c,plan[c][types[i]],types[i],isGym&&c==='merienda')).join('');
-  if(isGym){
-    const pg=rnd(postGym);
-    html+=`<div style="margin-top:10px;padding:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:14px">
-      <div style="font-size:14px;font-weight:600;color:var(--green);margin-bottom:6px">💪 Post-entreno (30 min después del gym)</div>
-      <div style="font-size:16px;color:#fff;font-weight:600">${pg.name}</div>
-      <div style="font-size:14px;color:var(--muted);margin-top:2px">${pg.bebida}</div>
-    </div>`;
-  }
-  document.getElementById('mealsContainer').innerHTML=html;
-}
+  const allComidas=[...comidas];
+  if(isGym) allComidas.splice(1,0,'postgym');
 
-function canDrinkToday(comida){
-  const d=currentDay;
-  const isGym=diasGym.includes(d);
-  if(isGym) return null;
-  if(comida==='desayuno'||comida==='merienda') return null;
-  // Vino: max 3 días (Mar=1, Jue=3, Dom=6), solo cena
-  const winedays=[1,3,6];
-  // Cerveza 0,0: hasta 5 días (no gym), comida y cena
-  const beerdays=[0,1,2,3,4,5,6].filter(x=>!diasGym.includes(x));
-  const wines=winedays.includes(d)&&comida==='cena';
-  const beers=beerdays.includes(d);
-  if(wines&&beers) return 'both';
-  if(beers) return 'beer';
-  return null;
-}
-
-function renderMeal(comida,menu,tipo,isPostGym){
-  const isOpen=openMeals[comida];
-  const kcal=kcalFromIng(menu.ings);
-  const badge=tipo==='rapido'
-    ?`<span class="badge badge-rapid">⚡ ${menu.tiempo}</span>`
-    :`<span class="badge badge-elaborado">👨‍🍳 ${menu.tiempo}</span>${menu.dif?`<span class="badge badge-dif">${menu.dif}</span>`:''}`;
-  
-  // Type switcher per meal
-  const switcher=`<div style="display:flex;gap:6px;margin-bottom:10px">
-    <button onclick="switchMealType('${comida}','rapido')" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid ${tipo==='rapido'?'var(--green)':'var(--border)'};background:${tipo==='rapido'?'rgba(37,211,102,.08)':'var(--card2)'};color:${tipo==='rapido'?'var(--green)':'var(--muted)'};font-size:13px;cursor:pointer;font-weight:600">⚡ Rápido</button>
-    <button onclick="switchMealType('${comida}','elaborado')" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid ${tipo==='elaborado'?'var(--orange)':'var(--border)'};background:${tipo==='elaborado'?'rgba(216,90,48,.08)':'var(--card2)'};color:${tipo==='elaborado'?'var(--orange)':'var(--muted)'};font-size:13px;cursor:pointer;font-weight:600">👨‍🍳 Elaborado</button>
-  </div>`;
-
-  // Drink options
-  const drinkOpt=canDrinkToday(comida);
-  let drinkSection='';
-  if(drinkOpt){
-    drinkSection=`<div style="background:rgba(239,159,39,.07);border:1px solid rgba(239,159,39,.2);border-radius:10px;padding:10px 12px;margin-top:8px">
-      <div style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:6px">🍷 Opción de bebida especial (tú decides)</div>
-      ${drinkOpt==='both'||drinkOpt==='beer'?`<div style="font-size:14px;color:#ccc;margin-bottom:4px">🍺 Cerveza tostada 0,0 (330ml) · ~90 kcal · Sin alcohol</div>`:''}
-      ${drinkOpt==='both'?`<div style="font-size:14px;color:#ccc">🍷 Vino tinto 1 copa (150ml) · ~120 kcal · Solo en cena</div>`:''}
-      <div style="font-size:12px;color:var(--muted);margin-top:6px">⚠️ No los dos el mismo día · Días de gym: solo agua</div>
-    </div>`;
-  }
-
-  return `<div class="meal-accordion${isOpen?' open':''}" id="meal-${comida}">
-    <div class="meal-toggle" onclick="toggleMeal('${comida}')">
-      <div class="meal-toggle-left">
-        <div class="meal-icon">${iconos[comida]}</div>
-        <div>
-          <div class="meal-name">${labels[comida]}</div>
-          <div class="meal-kcal-small">${menu.name} · ${kcal} kcal</div>
-        </div>
-      </div>
-      <i class="ti ti-chevron-down meal-arrow"></i>
-    </div>
-    <div class="meal-body">
-      ${switcher}
-      <div class="dish-card">
-        <div class="dish-header">
-          <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
-            ${(()=>{
-              const h=mealHistory[currentDay]&&mealHistory[currentDay][comida];
-              const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
-              const pos=h?h[posKey]:0;
-              const total=h?h[tipo].length:1;
-              const canPrev=pos>0;
-              const canNext=pos<total-1;
-              return `<button onclick="event.stopPropagation();navMeal('${comida}',-1)" style="background:none;border:1.5px solid ${canPrev?'var(--orange)':'var(--border)'};color:${canPrev?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canPrev?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">‹</button>
-              <div class="dish-title" style="flex:1;text-align:center">${menu.name}</div>
-              <button onclick="event.stopPropagation();navMeal('${comida}',1)" style="background:none;border:1.5px solid ${canNext?'var(--orange)':'var(--border)'};color:${canNext?'var(--orange)':'#555'};border-radius:8px;min-width:30px;height:30px;font-size:18px;cursor:${canNext?'pointer':'default'};flex-shrink:0;display:flex;align-items:center;justify-content:center">›</button>
-              ${total>1?`<span style="font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0">${pos+1}/${total}</span>`:''}`;
-            })()}
-          </div>
-          <div class="dish-badges" style="flex-shrink:0;margin-top:6px">${badge}</div>
-        </div>
-        <div class="nutri-box">
-          <div style="font-size:20px">📊</div>
-          <div class="nutri-vals">
-            <span class="nutri-label">Kcal</span>${kcal} &nbsp;
-            <span class="nutri-label">P</span>${protFromIng(menu.ings)}g &nbsp;
-            <span class="nutri-label">C</span>${carbFromIng(menu.ings)}g &nbsp;
-            <span class="nutri-label">G</span>${fatFromIng(menu.ings)}g
+  document.getElementById('mealsContainer').innerHTML=allComidas.map(c=>{
+    const isPost=c==='postgym';
+    const mLabel=isPost?'🏋️ Post-Gimnasio (11h-11:30h)':iconos[c]+' '+labels[c];
+    const sel=p[c].selected;
+    const opt=p[c].options[sel];
+    const kcal=kcalFromIng(opt.ings);
+    const prot=protFromIng(opt.ings);
+    const carb=carbFromIng(opt.ings);
+    const fat=fatFromIng(opt.ings);
+    const isOpen=openMeals[c]||false;
+    return `<div class="meal-accordion ${isOpen?'open':''}" id="meal_${di}_${c}">
+      <div class="meal-toggle" onclick="toggleMeal(${di},'${c}')">
+        <div class="meal-toggle-left">
+          <span class="meal-icon">${isPost?'🏋️':iconos[c]}</span>
+          <div>
+            <div class="meal-name">${isPost?'Post-Gimnasio':labels[c]}</div>
+            <div class="meal-kcal-small">${opt.name.substring(0,28)}${opt.name.length>28?'…':''} · ${kcal} kcal</div>
           </div>
         </div>
-        <div class="dish-row"><span class="dish-row-label">🥘 Ingredientes:</span></div>
-        <table class="ing-table">
-          ${menu.ings.map(i=>`<tr><td>${i.n}</td><td>${i.g}${i.u}</td></tr>`).join('')}
-        </table>
-        ${menu.bebida?`<div class="dish-row"><span class="dish-row-label">🥤</span><span class="dish-row-val bebida">${menu.bebida}</span></div>`:''}
-        ${menu.postre?`<div class="dish-row"><span class="dish-row-label">🍮</span><span class="dish-row-val postre">${menu.postre}</span></div>`:''}
-        ${drinkSection}
+        <i class="ti ti-chevron-down meal-arrow"></i>
       </div>
-      ${menu.pasos ? `<button class="recipe-btn" onclick="toggleRecipe('${comida}')">
-        <i class="ti ti-chef-hat"></i> 📋 Ver cómo se prepara
-      </button>
-      <div class="recipe-section" id="recipe-${comida}" style="display:none">
-        <div style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px">Elaboración paso a paso</div>
-        ${menu.pasos.map((p,idx)=>'<div class="recipe-step"><div class="recipe-step-num">'+(idx+1)+'</div><div>'+p.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')+'</div></div>').join('')}
-      </div>` : ''}
-      <button class="change-btn" onclick="changeMeal('${comida}')">
-        <i class="ti ti-refresh" style="color:var(--orange)"></i> Cambiar este ${labels[comida].toLowerCase()}
-      </button>
-    </div>
-  </div>`;
+      <div class="meal-body">
+        <div class="dish-card">
+          <div class="dish-title">${opt.name}</div>
+          <table class="ing-table">
+            ${opt.ings.map(i=>`<tr><td>${i.n}</td><td>${i.g}${i.u}</td><td>${Math.round(i.kcal100*i.g/100)} kcal</td></tr>`).join('')}
+          </table>
+          <div class="dish-row"><span class="dish-row-label">💧 Bebida:</span><span class="dish-row-val bebida">${opt.bebida}</span></div>
+          ${opt.postre&&!isPost?`<div class="dish-row"><span class="dish-row-label">🍮 Postre:</span><span class="dish-row-val postre">${opt.postre}</span></div>`:''}
+          <div class="nutri-box">
+            <span class="nutri-icon">📊</span>
+            <div><div class="nutri-label">VALOR NUTRICIONAL</div>
+            <div class="nutri-vals">Cal: ${kcal} | Prot: ${prot}g | HC: ${carb}g | Grasas: ${fat}g</div></div>
+          </div>
+        </div>
+        <button class="change-btn" onclick="changeOption(${di},'${c}')">
+          <i class="ti ti-refresh" style="color:#EF9F27"></i> Cambiar Opción
+        </button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function toggleAddToList(comida, dayIdx, btn){
-  const added=addToGlobalList(comida, dayIdx);
-  if(added){
-    btn.innerHTML='<i class="ti ti-check"></i> ✅ Añadido a mi lista';
-    btn.classList.add('added');
-    showToast('✅ Añadido a tu lista de compra');
-  } else {
-    btn.innerHTML='<i class="ti ti-playlist-add"></i> ➕ Añadir a mi lista';
-    btn.classList.remove('added');
-    showToast('❌ Quitado de la lista');
+function toggleMeal(di,c){
+  openMeals[c]=!openMeals[c];
+  const el=document.getElementById(`meal_${di}_${c}`);
+  el.classList.toggle('open');
+}
+
+function changeOption(di,c){
+  const p=weekPlan[di];
+  const total=p[c].options.length;
+  const next=(p[c].selected+1)%total;
+  if(next===0){
+    showToast('🔄 Has visto todas las opciones, volviendo al principio');
   }
+  p[c].selected=next;
+  openMeals[c]=true;
+  renderDayPanel(di);
+  renderDays();
 }
 
 function showToast(msg){
-  let t=document.getElementById('toast');
+  const t=document.getElementById('toast-msg');
   if(!t){
-    t=document.createElement('div');
-    t.id='toast';
-    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s';
-    document.body.appendChild(t);
+    const d=document.createElement('div');
+    d.id='toast-msg';
+    d.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#D85A30;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s';
+    d.textContent=msg;
+    document.body.appendChild(d);
+    setTimeout(()=>d.style.opacity='1',10);
+    setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),300);},3000);
   }
-  t.textContent=msg;
-  t.style.opacity='1';
-  clearTimeout(t._timer);
-  t._timer=setTimeout(()=>t.style.opacity='0',2000);
 }
 
-function toggleMeal(c){
-  openMeals[c]=!openMeals[c];
-  renderDayContent();
-}
+function randomDay(di){weekPlan[di]=randomMenu();openMeals={};renderDayPanel(di);renderDays();}
 
-var openRecipes={};
-function toggleRecipe(comida){
-  var el=document.getElementById('recipe-'+comida);
-  if(!el) return;
-  var isOpen=el.style.display==='block';
-  el.style.display=isOpen?'none':'block';
-  openRecipes[comida]=!isOpen;
-}
-
-function switchMealType(comida, tipo){
-  weekPlan[currentDay][comida].tipo=tipo;
-  savePlan();
-  renderDayContent();
-  renderDays();
-}
-
-function changeMeal(c){
-  const tipo=weekPlan[currentDay][c].tipo||'rapido';
-  const nuevo=rnd(menus[c][tipo]);
-  weekPlan[currentDay][c][tipo]=nuevo;
-  // Guardar en historial
-  if(mealHistory[currentDay]&&mealHistory[currentDay][c]){
-    const h=mealHistory[currentDay][c];
-    const posKey='pos'+tipo.charAt(0).toUpperCase()+tipo.slice(1);
-    h[tipo].splice(h[posKey]+1);
-    h[tipo].push(nuevo);
-    h[posKey]=h[tipo].length-1;
-  }
-  savePlan();
-  renderDayContent();
-  renderDays();
-}
-
-function randomDay(i){
-  weekPlan[i]=generateDayPlan();
-  savePlan();
-  renderDayContent();
-  renderDays();
-}
-
-function resetWeek(){
-  if(!confirm('¿Generar una semana completamente nueva?')) return;
-  weekPlan=dias.map(()=>generateDayPlan());
-  savePlan();
-  closeDay();
-}
-
-// ===== SHOP LIST =====
 function toggleShop(){
-  const p=document.getElementById('shopPanel');
-  p.style.display=p.style.display==='none'?'block':'none';
-  if(p.style.display==='block'){
-    renderShopDaySelector();
-    p.scrollIntoView({behavior:'smooth'});
+  const panel=document.getElementById('shopPanel');
+  if(panel.style.display==='none'){
+    panel.style.display='block';
+    renderShopSelector();
+    panel.scrollIntoView({behavior:'smooth'});
+  } else {
+    panel.style.display='none';
   }
 }
 
-function renderShopDaySelector(){
+function renderShopSelector(){
   document.getElementById('shopDaySelector').innerHTML=dias.map((d,i)=>
-    `<button class="shop-day-btn" onclick="renderShopList(${i})">${d.slice(0,3)}</button>`
+    `<button class="shop-day-btn" onclick="buildShopForDay(${i})">${d.substring(0,3)}</button>`
   ).join('');
-  document.getElementById('shopList').innerHTML='<div style="color:var(--muted);font-size:var(--fs-xs);text-align:center;padding:16px">Selecciona un día</div>';
+  document.getElementById('shopList').innerHTML='<p style="font-size:13px;color:#666;padding:10px 0">👆 Toca un día para ver su lista</p>';
 }
 
-let shopDayIdx=-1;
-let shopDeleted={};
-
-function renderShopList(dayIdx){
-  shopDayIdx=dayIdx;
-  document.querySelectorAll('.shop-day-btn').forEach((b,i)=>b.classList.toggle('selected',i===dayIdx));
-  buildShopHtml();
-}
-
-function buildShopHtml(){
-  const plan=weekPlan[shopDayIdx];
-  const allIngs={};
-  // Only use the selected type per meal
-  comidas.forEach(c=>{
-    const tipo=plan[c].tipo||'rapido';
-    plan[c][tipo].ings.forEach(ing=>{
-      const k=ing.n.toLowerCase();
-      if(!allIngs[k]) allIngs[k]={n:ing.n,g:0,u:ing.u,cat:getCat(ing.n)};
-      allIngs[k].g+=ing.g;
+function buildShopForDay(di){
+  document.querySelectorAll('.shop-day-btn').forEach((b,i)=>b.classList.toggle('selected',i===di));
+  const shopItems={};
+  const allC=[...comidas];
+  if(diasGym.includes(di)) allC.push('postgym');
+  allC.forEach(c=>{
+    const o=weekPlan[di][c].options[weekPlan[di][c].selected];
+    o.ings.forEach(ing=>{
+      const k=ing.n;
+      if(!shopItems[k])shopItems[k]={g:0,u:ing.u};
+      shopItems[k].g+=ing.g;
     });
   });
-  // Filter deleted
-  const del=shopDeleted[shopDayIdx]||{};
-  const cats={};
-  Object.entries(allIngs).forEach(([k,i])=>{
-    if(del[k]) return;
-    if(!cats[i.cat]) cats[i.cat]=[];
-    cats[i.cat].push({...i,key:k});
+
+  const cats={
+    proteinas:{label:'Proteínas',icon:'ti-meat',words:['pollo','pavo','merluza','salmón','bacalao','sardinas','dorada','huevo','cottage']},
+    lacteos:{label:'Lácteos',icon:'ti-droplet',words:['yogur','kéfir','queso','leche']},
+    verduras:{label:'Verduras',icon:'ti-leaf',words:['espinacas','brócoli','calabacín','pimientos','tomate','pepino','zanahoria','espárragos','champiñones','cebolla','rúcula','calabaza','judías','lechuga','verduras']},
+    frutas:{label:'Frutas',icon:'ti-apple',words:['manzana','naranja','pera','mandarina','kiwi','fresas','arándanos','ciruelas','limón']},
+    cereales:{label:'Cereales y legumbres',icon:'ti-grain',words:['avena','arroz','quinoa','lentejas','pasta','pan','tortita','boniato','patata']},
+    grasas:{label:'Grasas saludables',icon:'ti-fish',words:['aguacate','nueces','almendras','hummus','semillas','lino','aove']},
+    otros:{label:'Otros',icon:'ti-package',words:['gelatina','canela','caldo']},
+  };
+
+  const assigned=new Set();let html=`<p style="font-size:14px;font-weight:600;color:#fff;margin:8px 0 4px">Lista para el <span style="color:#D85A30">${dias[di]}</span>${diasGym.includes(di)?' 🏋️':''}</p>`;
+  Object.values(cats).forEach(cat=>{
+    const matching=Object.entries(shopItems).filter(([k])=>cat.words.some(w=>k.toLowerCase().includes(w))&&!assigned.has(k));
+    if(!matching.length)return;
+    matching.forEach(([k])=>assigned.add(k));
+    html+=`<div class="shop-cat-label"><i class="ti ${cat.icon}"></i>${cat.label}</div>`;
+    html+=matching.map(([k,v])=>`<div class="shop-item"><div class="shop-item-left"><i class="ti ti-circle-check"></i>${k}</div><span class="shop-qty">${v.g}${v.u}</span></div>`).join('');
   });
-  let html='';
-  const hasDel=Object.keys(del).length>0;
-  if(hasDel){
-    html+=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-      <button onclick="restoreAll()" style="font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;text-decoration:underline">↩ Restaurar eliminados</button>
-    </div>`;
-  }
-  Object.entries(cats).sort().forEach(([cat,items])=>{
-    html+=`<div class="shop-cat-label"><i class="ti ti-tag"></i>${cat}</div>`;
-    items.forEach(i=>{
-      html+=`<div class="shop-item">
-        <div style="display:flex;align-items:center;gap:8px;flex:1"><i class="ti ti-circle-dot" style="color:var(--orange)"></i>${i.n}</div>
-        <span class="shop-qty">${Math.round(i.g)}${i.u}</span>
-        <button onclick="deleteShopItem('${i.key}')" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:0 0 0 10px;font-size:18px" title="Ya lo tengo">✕</button>
-      </div>`;
-    });
-  });
-  if(!html) html='<div style="color:var(--muted);font-size:var(--fs-xs);text-align:center;padding:16px">¡Lista vacía! Todos los productos eliminados.</div>';
-  html+=`<div style="margin-top:12px">
-    <button onclick="shareShopWhatsApp()" style="width:100%;padding:12px;border-radius:12px;background:var(--green);color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-      <i class="ti ti-brand-whatsapp"></i> Enviar lista por WhatsApp
-    </button>
-  </div>`;
   document.getElementById('shopList').innerHTML=html;
 }
 
-function deleteShopItem(key){
-  if(!shopDeleted[shopDayIdx]) shopDeleted[shopDayIdx]={};
-  shopDeleted[shopDayIdx][key]=true;
-  buildShopHtml();
-}
+function resetWeek(){closeDay();initWeek();}
 
-function restoreAll(){
-  shopDeleted[shopDayIdx]={};
-  buildShopHtml();
-}
-
-function shareShopWhatsApp(){
-  const plan=weekPlan[shopDayIdx];
-  const del=shopDeleted[shopDayIdx]||{};
-  const allIngs={};
-  comidas.forEach(c=>{
-    const tipo=plan[c].tipo||'rapido';
-    plan[c][tipo].ings.forEach(ing=>{
-      const k=ing.n.toLowerCase();
-      if(del[k]) return;
-      if(!allIngs[k]) allIngs[k]={n:ing.n,g:0,u:ing.u,cat:getCat(ing.n)};
-      allIngs[k].g+=ing.g;
+function shareWhatsApp(){
+  let txt='*Mi menú semanal saludable*\n\n';
+  dias.forEach((d,di)=>{
+    txt+=`*${d}*${diasGym.includes(di)?' 🏋️':''}\n`;
+    comidas.forEach(c=>{
+      const o=weekPlan[di][c].options[weekPlan[di][c].selected];
+      txt+=`• ${labels[c]}: ${o.name} (${kcalFromIng(o.ings)} kcal)\n`;
+      if(o.bebida)txt+=`  💧 ${o.bebida}\n`;
+      if(o.postre)txt+=`  🍮 ${o.postre}\n`;
     });
-  });
-  const cats={};
-  Object.values(allIngs).forEach(i=>{
-    if(!cats[i.cat]) cats[i.cat]=[];
-    cats[i.cat].push(i);
-  });
-  let txt='🛒 *Lista de compra — '+dias[shopDayIdx]+'*\n\n';
-  Object.entries(cats).sort().forEach(function(entry){
-    var cat=entry[0], items=entry[1];
-    txt+='*'+cat+'*\n';
-    items.forEach(function(i){ txt+='• '+i.n+': '+Math.round(i.g)+i.u+'\n'; });
+    if(diasGym.includes(di)){const o=weekPlan[di].postgym.options[weekPlan[di].postgym.selected];txt+=`• 🏋️ Post-gym: ${o.name}\n`;}
     txt+='\n';
   });
-  window.open('https://wa.me/?text='+encodeURIComponent(txt));
+  txt+='_Plan de pérdida de peso personalizado_ 💪';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
-
-function getCat(name){
-  const n=name.toLowerCase();
-  if(/pollo|pavo|ternera|conejo|muslo|pechuga|carne/.test(n)) return '🥩 Carnes';
-  if(/merluza|salmón|bacalao|dorada|lubina|sardina|boquerón|rape|atún|mejillón|almeja|gamba|vieira/.test(n)) return '🐟 Pescados y Mariscos';
-  if(/huevo|clara|yema/.test(n)) return '🥚 Huevos';
-  if(/leche|yogur|queso|kéfir|requesón|cottage/.test(n)) return '🥛 Lácteos';
-  if(/arroz|pasta|fideos|quinoa|avena|pan|tortita|muesli|granola|lámina/.test(n)) return '🌾 Cereales';
-  if(/garbanzo|lenteja|alubia|judía/.test(n)) return '🫘 Legumbres';
-  if(/tomate|lechuga|espinaca|brócoli|calabacín|pimiento|zanahoria|cebolla|ajo|espárrago|champiñón|seta|puerro|apio|rúcula|acelga|calabaza|boniato|patata|guisante/.test(n)) return '🥦 Verduras';
-  if(/manzana|naranja|plátano|kiwi|fresa|arándano|pera|mandarina|limón|mango|melón|ciruela|fruta/.test(n)) return '🍎 Frutas';
-  if(/nuez|almendra|semilla|lino|chía|pipas|sésamo|girasol|aguacate|mantequilla de almendra/.test(n)) return '🥜 Frutos secos y semillas';
-  if(/aove|aceite|vinagre|mostaza|alcaparra/.test(n)) return '🫙 Condimentos';
-  if(/canela|pimentón|cúrcuma|comino|azafrán|pimienta|romero|tomillo|perejil|eneldo|laurel|hierba|jengibre/.test(n)) return '🌿 Especias y hierbas';
-  if(/vino|caldo/.test(n)) return '🍶 Caldos y vinos';
-  if(/miel|cacao/.test(n)) return '🍯 Otros';
-  return '🛒 Varios';
-}
-
-// ===== WHATSAPP =====
-function shareWhatsApp(){
-  // If a day is open, send just that day; otherwise ask to select one
-  if(currentDay>=0){
-    shareWhatsAppDay(currentDay);
-  } else {
-    // Send full week
-    var txt='🥗 *Menú Semanal Boni*\n\n';
-    dias.forEach(function(d,i){
-      txt+='*'+d+'*\n';
-      comidas.forEach(function(c){
-        var tipo=weekPlan[i][c].tipo||'rapido';
-        var m=weekPlan[i][c][tipo];
-        txt+=iconos[c]+' '+labels[c]+': '+m.name+'\n';
-      });
-      txt+='\n';
-    });
-    window.open('https://wa.me/?text='+encodeURIComponent(txt));
-  }
-}
-
-function shareWhatsAppDay(i){
-  var d=dias[i];
-  var isGym=diasGym.includes(i);
-  var txt='🥗 *Menú '+d+'*'+(isGym?' 🏋️':'')+' \n\n';
-  comidas.forEach(function(c){
-    var tipo=weekPlan[i][c].tipo||'rapido';
-    var m=weekPlan[i][c][tipo];
-    var tipoLabel=tipo==='rapido'?'⚡':'👨‍🍳';
-    txt+=iconos[c]+' *'+labels[c]+'* '+tipoLabel+'\n';
-    txt+='   '+m.name+'\n';
-    txt+='   '+kcalFromIng(m.ings)+' kcal\n\n';
-  });
-  txt+='📊 *Total: '+totalKcal(weekPlan[i],'rapido')+' kcal aprox*\n';
-  window.open('https://wa.me/?text='+encodeURIComponent(txt));
-}
-
-// ===== START =====
-// (moved to end of file)
 
 function openConsejos(){
-  const frase=rnd(frases);
-  let html=`<div class="modal-header"><div class="modal-title"><span>💡</span>Consejos y motivación</div><button class="modal-close" onclick="closeOverlay()">×</button></div>`;
-  html+=`<div class="frase-card"><div class="frase-text">"${frase.text}"</div><div class="frase-autor">— ${frase.autor}</div></div>`;
-  consejos.forEach(c=>{
-    html+=`<div class="tip-cat-title"><span>${c.icon}</span><span style="color:${c.color}">${c.cat}</span></div>`;
-    html+=`<div class="tip-block">`;
-    c.items.forEach(t=>{
-      html+=`<div class="tip-item ${t.type}"><i class="ti ${t.icon}"></i>${t.text}</div>`;
-    });
-    html+=`</div>`;
-  });
-  document.getElementById('modal').innerHTML=html;
+  const frase=frases[Math.floor(Math.random()*frases.length)];
+  document.getElementById('modal').innerHTML=`
+    <div class="modal-header">
+      <div class="modal-title">💡 Consejos y motivación</div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="tip-highlight">👤 Perfil: 64 años · 108 kg · Gym L/M/V · Pérdida de grasa</div>
+    <div class="frase-card"><div class="frase-text">"${frase.text}"</div><div class="frase-autor">— ${frase.autor}</div></div>
+    ${consejos.map(sec=>`
+      <div class="tip-cat-title" style="color:${sec.color}">${sec.icon} ${sec.cat}</div>
+      <div class="tip-block">${sec.items.map(it=>`<div class="tip-item ${it.type}"><i class="ti ${it.icon}"></i><span>${it.text}</span></div>`).join('')}</div>`).join('')}
+    <button class="btn btn-orange btn-full" onclick="closeModal()" style="margin-top:6px">✅ Entendido, a por ello</button>`;
   document.getElementById('overlay').classList.add('open');
 }
 
-function closeOverlay(){document.getElementById('overlay').classList.remove('open');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
 
-
-
-// ===== MI LISTA =====
-let miListaSeleccion={}; // {dayIdx_comida: true/false}
-
-function openMiLista(){
-  const p=document.getElementById('miListaPanel');
-  p.style.display='block';
-  renderMiListaPlatos();
-  p.scrollIntoView({behavior:'smooth'});
+// PWA
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBar').classList.add('show');
+});
+function installApp(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.choosenChoice=true;
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBar').classList.remove('show');});}
 }
+window.addEventListener('appinstalled',()=>document.getElementById('installBar').classList.remove('show'));
 
-function closeMiLista(){
-  document.getElementById('miListaPanel').style.display='none';
-  document.getElementById('miListaResult').innerHTML='';
-}
-
-function renderMiListaPlatos(){
-  const el=document.getElementById('miListaPlatos');
-  let html='';
-  dias.forEach((dia,i)=>{
-    html+=`<div style="margin-bottom:14px">
-      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;text-transform:uppercase">${dia}</div>`;
-    comidas.forEach(c=>{
-      const tipo=weekPlan[i][c].tipo||'rapido';
-      const menu=weekPlan[i][c][tipo];
-      const key=i+'_'+c;
-      const checked=miListaSeleccion[key]?'checked':'';
-      html+=`<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--card2);border-radius:var(--rs);margin-bottom:5px;cursor:pointer;border:1px solid ${checked?'var(--orange)':'var(--border)'}">
-        <input type="checkbox" ${checked} onchange="miListaSeleccion['${key}']=this.checked;this.closest('label').style.borderColor=this.checked?'var(--orange)':'var(--border)'" style="width:18px;height:18px;accent-color:var(--orange);flex-shrink:0">
-        <div>
-          <div style="font-size:13px;color:#fff;font-weight:500">${labels[c]}</div>
-          <div style="font-size:12px;color:var(--muted)">${menu.name}</div>
-        </div>
-      </label>`;
-    });
-    html+='</div>';
-  });
-  el.innerHTML=html;
-}
-
-function generarMiLista(){
-  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
-  if(!seleccionados.length){
-    document.getElementById('miListaResult').innerHTML='<p style="color:var(--muted);font-size:13px;text-align:center;padding:10px">Selecciona al menos un plato</p>';
-    return;
-  }
-  const allIngs={};
-  seleccionados.forEach(([key])=>{
-    const [dayIdx,comida]=key.split('_');
-    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
-    const menu=weekPlan[dayIdx][comida][tipo];
-    const platoLabel=labels[comida]+' · '+dias[dayIdx];
-    menu.ings.forEach(ing=>{
-      if(esDespensa(ing.n)) return;
-      const k=ing.n.toLowerCase();
-      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,platos:[],cat:getCat(ing.n)};
-      allIngs[k].cantidad+=ing.g;
-      allIngs[k].platos.push(platoLabel);
-    });
-  });
-  const cats={};
-  Object.values(allIngs).forEach(i=>{
-    if(!cats[i.cat]) cats[i.cat]=[];
-    cats[i.cat].push(i);
-  });
-  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <div style="font-size:14px;font-weight:700;color:var(--orange)">🛒 Lista generada</div>
-    <button onclick="compartirListaWA()" style="background:var(--green);color:#fff;border:none;border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
-  </div>`;
-  Object.entries(cats).sort().forEach(([cat,items])=>{
-    html+=`<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin:10px 0 5px">${cat}</div>`;
-    items.forEach(item=>{
-      html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)">
-        <div>
-          <div style="font-size:14px;color:#fff">${item.nombre}</div>
-          <div style="font-size:11px;color:var(--muted)">${item.platos.join(' · ')}</div>
-        </div>
-        <div style="font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;margin-left:8px">${Math.round(item.cantidad)}${item.unidad}</div>
-      </div>`;
-    });
-  });
-  document.getElementById('miListaResult').innerHTML=html;
-  document.getElementById('miListaResult').scrollIntoView({behavior:'smooth'});
-}
-
-function compartirListaWA(){
-  const seleccionados=Object.entries(miListaSeleccion).filter(([k,v])=>v);
-  const allIngs={};
-  seleccionados.forEach(([key])=>{
-    const [dayIdx,comida]=key.split('_');
-    const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
-    const menu=weekPlan[dayIdx][comida][tipo];
-    menu.ings.forEach(ing=>{
-      if(esDespensa(ing.n)) return;
-      const k=ing.n.toLowerCase();
-      if(!allIngs[k]) allIngs[k]={nombre:ing.n,cantidad:0,unidad:ing.u,cat:getCat(ing.n)};
-      allIngs[k].cantidad+=ing.g;
-    });
-  });
-  const cats={};
-  Object.values(allIngs).forEach(i=>{
-    if(!cats[i.cat]) cats[i.cat]=[];
-    cats[i.cat].push(i);
-  });
-  let txt='🛒 *Mi lista de la compra*\n\n';
-  Object.entries(cats).sort().forEach(([cat,items])=>{
-    txt+=`*${cat}*\n`;
-    items.forEach(i=>{ txt+=`• ${i.nombre}: ${Math.round(i.cantidad)}${i.unidad}\n`; });
-    txt+='\n';
-  });
-  window.open('https://wa.me/?text='+encodeURIComponent(txt));
-}
-
-// ===== LISTA GLOBAL (legacy) =====
-// Ingredientes de despensa (no se añaden a la lista)
-const despensa=new Set(['aove','aceite','sal','vinagre','pimienta','agua','azúcar','harina','bicarbonato','levadura','canela','cúrcuma','comino','pimentón','romero','tomillo','perejil','eneldo','laurel','orégano','hierbas','hierba','jengibre','azafrán','mostaza','caldo','ajo','cebolla','tomate natural triturado','tomate triturado']);
-
-function esDespensa(nombre){
-  const n=nombre.toLowerCase();
-  return [...despensa].some(d=>n.includes(d));
-}
-
-let globalList=[]; // [{nombre, cantidad, unidad, plato, dia, key}]
-
-function addToGlobalList(comida, dayIdx){
-  const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
-  const menu=weekPlan[dayIdx][comida][tipo];
-  const dia=dias[dayIdx];
-  const platoLabel=labels[comida]+' · '+dia;
-  const key=dayIdx+'_'+comida+'_'+tipo;
-  // Toggle: quitar si ya estaba
-  const existe=globalList.findIndex(x=>x.key===key);
-  if(existe>=0){
-    globalList.splice(existe,1);
-    renderGlobalList();
-    return false; // quitado
-  }
-  // Añadir ingredientes no despensa
-  menu.ings.forEach(ing=>{
-    if(esDespensa(ing.n)) return;
-    globalList.push({nombre:ing.n,cantidad:ing.g,unidad:ing.u,plato:platoLabel,key,cat:getCat(ing.n)});
-  });
-  renderGlobalList();
-  return true; // añadido
-}
-
-function removeGlobalItem(idx){
-  globalList.splice(idx,1);
-  renderGlobalList();
-}
-
-function clearGlobalList(){
-  if(!confirm('¿Vaciar toda la lista?')) return;
-  globalList=[];
-  renderGlobalList();
-  renderDayContent();
-}
-
-function renderGlobalList(){
-  const el=document.getElementById('globalListContent');
-  if(!el) return;
-  if(!globalList.length){
-    el.innerHTML='<div style="color:var(--muted);font-size:var(--fs-xs);text-align:center;padding:20px">Lista vacía · Abre un plato y pulsa ➕ Añadir a mi lista</div>';
-    return;
-  }
-  // Agrupar por categoría
-  const cats={};
-  globalList.forEach((item,idx)=>{
-    if(!cats[item.cat]) cats[item.cat]=[];
-    cats[item.cat].push({...item,idx});
-  });
-  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <button onclick="shareGlobalWhatsApp()" style="background:var(--green);color:#fff;border:none;border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
-    <button onclick="clearGlobalList()" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-left:8px;text-decoration:underline">Vaciar</button>
-  </div>`;
-  Object.entries(cats).sort().forEach(([cat,items])=>{
-    html+=`<div class="shop-cat-label"><i class="ti ti-tag"></i>${cat}</div>`;
-    items.forEach(item=>{
-      html+=`<div class="global-list-item">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-dot" style="color:var(--orange)"></i>${item.nombre} <span style="color:var(--gold);font-weight:600">${Math.round(item.cantidad)}${item.unidad}</span></div>
-          <div class="global-list-origin">📌 ${item.plato}</div>
-        </div>
-        <button onclick="removeGlobalItem(${item.idx})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 0 0 8px">✕</button>
-      </div>`;
-    });
-  });
-  el.innerHTML=html;
-}
-
-function shareGlobalWhatsApp(){
-  if(!globalList.length) return;
-  const cats={};
-  globalList.forEach(i=>{
-    if(!cats[i.cat]) cats[i.cat]=[];
-    cats[i.cat].push(i);
-  });
-  let txt='🛒 *Mi lista de compra*\n\n';
-  Object.entries(cats).sort().forEach(([cat,items])=>{
-    txt+='*'+cat+'*\n';
-    items.forEach(i=>{ txt+='• '+i.nombre+': '+Math.round(i.cantidad)+i.unidad+' ('+i.plato+')\n'; });
-    txt+='\n';
-  });
-  window.open('https://wa.me/?text='+encodeURIComponent(txt));
-}
-
-function toggleGlobalList(){
-  const p=document.getElementById('globalListPanel');
-  p.style.display=p.style.display==='none'?'block':'none';
-  if(p.style.display==='block'){
-    renderGlobalList();
-    p.scrollIntoView({behavior:'smooth'});
-  }
-}
-
-function isInGlobalList(comida, dayIdx){
-  const tipo=weekPlan[dayIdx][comida].tipo||'rapido';
-  const key=dayIdx+'_'+comida+'_'+tipo;
-  return globalList.some(x=>x.key===key);
-}
-
-// ===== INIT =====
-const overlayEl=document.getElementById('overlay');
-if(overlayEl) overlayEl.addEventListener('click',e=>{if(e.target.id==='overlay') closeOverlay();});
-init();
+initWeek();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").then(()=>console.log("SW OK")).catch(e=>console.log(e));}</script>
 </body>
 </html>
